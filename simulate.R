@@ -21,7 +21,7 @@ age <- round(rnorm(n_nodes,20,3))
 
 # create the matrix
 
-edges <- sample(0:1, n_nodes*n_nodes, replace = TRUE, prob = c(0.5, 0.5))
+edges <- sample(0:1, n_nodes*n_nodes, replace = TRUE, prob = c(0.7, 0.3))
 
 my_sociomatrix <- matrix(edges,
                          nrow = n_nodes, # nrow must be same as ncol
@@ -39,7 +39,7 @@ net <- as.network(x = my_sociomatrix, # the network object
 
 # add 'names'
 
-network.vertex.names(net) <- LETTERS[1:10]
+network.vertex.names(net) <- LETTERS[1:n_nodes]
 
 # add attributes
 
