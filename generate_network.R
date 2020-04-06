@@ -2,7 +2,7 @@ gen_net <- function(n = 100, # number of nodes
                     G = 3, # number of groups
                     G_perc = rep(1 / G, times = G), # vector % group 
                     G_dens = 0.1, # prob of edge in a group
-                    betw_dens = 0.05, # prob of edge between groups
+                    betw_dens = 0.01 # prob of edge between groups
 ) {
   G_size <- as.vector(rmultinom(1, n, prob = G_perc)) # absolute group sizes
   
@@ -34,5 +34,13 @@ gen_net <- function(n = 100, # number of nodes
     position_start <- position_end + 1
     i <- i+1
   }
+  
+  diag(sociomatrix) <- 0 # no self-edges
+  
+  # make a network
+  net <- as_tbl_graph(sociomatrix, nodes = c(1:n))
+  
+  # return the network
+  return(network = net)
 }
 
