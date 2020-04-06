@@ -38,7 +38,12 @@ gen_net <- function(n = 100, # number of nodes
   diag(sociomatrix) <- 0 # no self-edges
   
   # make a network
-  net <- as_tbl_graph(sociomatrix, nodes = c(1:n))
+  net <- as.network(x = sociomatrix, # the network object
+                    directed = TRUE, # specify whether the network is directed
+                    loops = FALSE, # no self ties
+                    vertex.attr = c(1:n), # name the nodges
+                    matrix.type = "adjacency" # the type of input
+  )
   
   # return the network
   return(network = net)
