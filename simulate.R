@@ -11,12 +11,6 @@ set.seed(09101999)
 
 n_nodes <- 10
 
-my_sociomatrix <- matrix(round(runif(n_nodes*n_nodes)), # edge values
-                         nrow = n_nodes, # nrow must be same as ncol
-                         ncol = n_nodes)
-
-diag(my_sociomatrix) <- 0 # no self-edges
-
 # create a gender variable
 
 gender <- c(rep("Female",n_nodes/2),rep("Male",n_nodes/2))
@@ -24,6 +18,16 @@ gender <- c(rep("Female",n_nodes/2),rep("Male",n_nodes/2))
 # create an age variable
 
 age <- round(rnorm(n_nodes,20,3))
+
+# create the matrix
+
+edges <- sample(0:1, n_nodes*n_nodes, replace = TRUE, prob = c(0.5, 0.5))
+
+my_sociomatrix <- matrix(edges,
+                         nrow = n_nodes, # nrow must be same as ncol
+                         ncol = n_nodes)
+
+diag(my_sociomatrix) <- 0 # no self-edges
 
 ## creating a network object
 
