@@ -10,7 +10,7 @@ set.seed(09101999)
 
 ## simulate
 
-S1 <- rmvnorm(50, c(0,0))
-modS1<- ergmm(S1 ~ euclidean(d=2, G=3))
+pos <- rmvnorm(50, c(0,0))
+modS1<- ergmm(x ~ pos)
 
-plot(simulate(modS1))
+simulate(pos)

@@ -9,7 +9,7 @@ set.seed(09101999)
 
 ## specify the sociomatrix
 
-n_nodes <- 10
+n_nodes <- 50
 
 # create a gender variable
 
