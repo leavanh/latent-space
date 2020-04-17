@@ -1,4 +1,4 @@
-## All the self defined functions I use
+## All the self-defined functions I use
 
 # generate random points within a sphere
 
