@@ -1,6 +1,6 @@
-## All the self-defined functions I use
+### All the self-defined functions I use
 
-# generate random points within a sphere
+## generate random points within a sphere --------------------------------------
 
 rsphere <- function(
   n,  # number of points to generate
@@ -22,3 +22,13 @@ rsphere <- function(
   return(points)
 }
 
+## -----------------------------------------------------------------------------
+
+## generate a network out of the points ----------------------------------------
+
+gen_network <- function(points) 
+{
+  
+}
+
+## -----------------------------------------------------------------------------
