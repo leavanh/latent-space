@@ -1,15 +1,16 @@
 ### All the self-defined functions I use
 
-## generate random points within a sphere --------------------------------------
+## rsphere(n, dim, )
+# generate random points within a sphere ---------------------------------------
 
 rsphere <- function(
   n,  # number of points to generate
-  r = 0.5,   # radius of the sphere
-  dim = 3  # dimension in which to generate sphere
+  dim = 2,  # dimension in which to generate sphere
+  r = 0.5   # radius of the sphere
   ) 
 {
   points <- as.data.frame(matrix(NA, nrow = 1, ncol = dim + 1))
-  while(n < n + 1) {
+  while(nrow(points) < n + 1) {
    point <- runif(dim, min = -0.5, max = 0.5) # point within cube
    dist <- norm(point, type = "2") # distance to center
    if(dist <= r) { # only keep points in sphere
@@ -24,7 +25,9 @@ rsphere <- function(
 
 ## -----------------------------------------------------------------------------
 
-## generate a network out of the points ----------------------------------------
+
+## gen_network(points, directed)
+# generate a network out of the points -----------------------------------------
 
 gen_network <- function(
   points,  # df of points
@@ -62,8 +65,40 @@ gen_network <- function(
                     vertex.attr = c(1:n), # name the nodges
                     matrix.type = "adjacency") # the type of input
  
-  return(network)
+  return(list(network = network,
+              n = n,
+              probabilities = distance,
+              sociomatrix = sociomatrix,
+              dimensions = length(points) - 1
+              ))
 }
 
 ## -----------------------------------------------------------------------------
 
+## fit models
+# fit latent models with same and less dim -------------------------------------
+
+fit_models <- function(
+  net_list # the network list gen_network returns
+)
+{
+  # retrieve all important information from net_list
+  network <- net_list$network
+  n <- net_list$n
+  dim <- net_list$dimensions
+  
+  model_list <- vector(mode = "list", length = dim - 1) # empty list
+  
+  for(i in 2:dim) {
+    model <- ergmm(net ~ euclidean(d = i)) # fit model
+    model_list[[i-1]] <- model # add to list
+    names(model_list)[i-1] <- paste(i, "dim", sep = "_")
+    i <- i + 1
+  }
+  return(list(
+    models = model_list,
+    network = net_list
+  ))
+}
+
+## -----------------------------------------------------------------------------
