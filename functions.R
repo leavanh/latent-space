@@ -78,6 +78,8 @@ gen_network <- function(
 ## fit models
 # fit latent models with same and less dim -------------------------------------
 
+# problem with burning in to be fixed
+
 fit_models <- function(
   net_list # the network list gen_network returns
 )
@@ -90,7 +92,7 @@ fit_models <- function(
   model_list <- vector(mode = "list", length = dim - 1) # empty list
   
   for(i in 2:dim) {
-    model <- ergmm(net ~ euclidean(d = i)) # fit model
+    model <- ergmm(network ~ euclidean(d = i)) # fit model
     model_list[[i-1]] <- model # add to list
     names(model_list)[i-1] <- paste(i, "dim", sep = "_")
     i <- i + 1
