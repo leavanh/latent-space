@@ -94,7 +94,7 @@ fit_models <- function(
   for(i in 2:dim) {
     model <- ergmm(network ~ euclidean(d = i)) # fit model
     model_list[[i-1]] <- model # add to list
-    names(model_list)[i-1] <- paste(i, "dim", sep = "_") # name
+    names(model_list)[i-1] <- paste(i, "dim", "fit", sep = "_") # name
     i <- i + 1
   }
   return(list(
@@ -102,37 +102,36 @@ fit_models <- function(
     network = net_list
   ))
 }
+
 ## -----------------------------------------------------------------------------
 
 ## gen_fit_all
 # generate and fit many models at the same time --------------------------------
 
-gen_fit_all <- functions(
+gen_fit_all <- function(
   n, # vector of number of nodes
   dim, # up to what dimension
   ...
-) {
-  
-  # generate all networks
-  
-  net_list <- vector(mode = "list", length = length(n)) # empty list
+) 
+{
+  model_list <- vector(mode = "list", length = length(n)) # empty list models
   
   for(i in 1:length(n)) {
     dim_list <- vector(mode = "list", length = dim - 1) # empty list
     for(j in 2: dim) {
       points <- rsphere(n = n[i], dim = j)
-      network <- gen_network(points, ...)
-      dim_list[[j-1]] <- network # add to list
+      network <- gen_network(points)
+      models <- fit_models(network)
+      dim_list[[j-1]] <- models # add to list
       names(dim_list)[j-1] <- paste(n[i], "nodes", j, "dim", sep = "_") # name
       j = j + 1
     }
-    net_list[[i]] <- dim_list # add to list
-    names(net_list)[i] <- paste(n[i], "nodes", sep = "_") # name
+    model_list[[i]] <- dim_list # add to list
+    names(model_list)[i] <- paste(n[i], "nodes", sep = "_") # name
     i = i + 1
   }
   
-  # fit all models
-  
-  
+  return(model_list)
 }
+
 ## -----------------------------------------------------------------------------

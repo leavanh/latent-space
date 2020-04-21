@@ -17,7 +17,7 @@ set.seed(09101999)
 # 10, 50 and 100 nodes
 # up to 6 dimensions
 
-p <- rsphere(10, dim = 6)
-n <- gen_network(p)
-plot(n$network)
-m <- fit_models(n)
+simulation <- gen_fit_all(n = c(10, 50, 100), dim = 6)
+
+save(simulation, file = "simulation.RData") # save
+load("simulation.RData") # load
