@@ -81,8 +81,9 @@ gen_network <- function(
 # problem with burning in to be fixed
 
 fit_models <- function(
-  net_list # the network list gen_network returns
-)
+  net_list, # the network list gen_network returns
+  ...
+  )
 {
   # retrieve all important information from net_list
   network <- net_list$network
@@ -92,7 +93,7 @@ fit_models <- function(
   model_list <- vector(mode = "list", length = dim - 1) # empty list
   
   for(i in 2:dim) {
-    model <- ergmm(network ~ euclidean(d = i)) # fit model
+    model <- ergmm(network ~ euclidean(d = i), ...) # fit model
     model_list[[i-1]] <- model # add to list
     names(model_list)[i-1] <- paste(i, "dim", "fit", sep = "_") # name
     i <- i + 1
@@ -119,7 +120,7 @@ gen_fit_all <- function(
   for(i in 1:length(n)) {
     points <- rsphere(n = n[i], dim = dim)
     network <- gen_network(points)
-    models <- fit_models(network)
+    models <- fit_models(network, ...)
     model_list[[i]] <- models # add to list
     names(model_list)[i] <- c(paste(n[i], "nodes", dim, "dim", sep = "_")) # name
     i = i + 1
