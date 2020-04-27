@@ -15,4 +15,4 @@ plot(net_fit,
      vertex.col = node_colors, # color nodes by gender
      vertex.cex = (age)/5, # size nodes by their age
      labels = TRUE, # show the node names
-     )
+)

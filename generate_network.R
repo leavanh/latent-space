@@ -18,11 +18,11 @@ gen_net <- function(n = 100, # number of nodes
     
     # get edges for in group
     G_edges_i <- sample(c(0, 1), G_size_i*G_size_i, replace = TRUE, 
-                       prob = c((1 - G_dens), G_dens))
+                        prob = c((1 - G_dens), G_dens))
     
     # get edges for between groups
     betw_edges_i <- sample(c(0, 1), G_size_i*(n - G_size_i), replace = TRUE, 
-                      prob = c((1 - betw_dens), betw_dens))
+                           prob = c((1 - betw_dens), betw_dens))
     
     # fill the sociomatrix
     sociomatrix[position_start:position_end,
