@@ -21,3 +21,5 @@ set.seed(09101999)
 
 # save(simulation, file = "simulation.RData") # save
 load("simulation.RData") # load
+
+comp_distances(simulation$`100_nodes_6_dim`$network, simulation$`100_nodes_6_dim`$models)

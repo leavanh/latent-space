@@ -130,3 +130,37 @@ gen_fit_all <- function(
 }
 
 ## -----------------------------------------------------------------------------
+
+## comp_distances()
+# get the difference between the real and the fitted distances -----------------
+
+comp_distances <- function(
+  network, # true network
+  models, # models too compare with (a list)
+  mle = TRUE # fitted using mle?
+  )
+{
+  n_models <- length(models)
+  difference_list <- vector(mode = "list", length = n_models) # empty list
+  distance_network <- network$probabilities # true distances
+  for(i in 1:n_models) {
+    if(mle == TRUE) {
+    positions_model <- models[[i]]$mle$Z
+    } else warning("Have you fitted with mle?")
+  distance_model <- as.matrix(dist(positions_model)) # fitted distances
+  # auf 0-1 scalen fehlt noch
+  diff_matrix <- distance_model - distance_network
+  difference <- sqrt(
+    sum(
+      diff_matrix*diff_matrix
+      )
+  )
+  difference_list[[i]] <- difference # add to list
+  names(difference_list)[i] <- c(
+    paste(names(models)[i], "difference", sep = "_")) # name
+  i = i + 1
+  }
+  return(difference_list)
+}
+
+## -----------------------------------------------------------------------------
