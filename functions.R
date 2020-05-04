@@ -44,7 +44,7 @@ gen_network <- function(
   
   for(i in 1:n) {
     for(j in 1:n) {
-      tie_prob <- distance[i,j] # get prob for a tie
+      tie_prob <- 1- distance[i,j] # get prob for a tie
       tie <- rbernoulli(1, tie_prob) # generate a tie
       sociomatrix[i,j] <- tie # add to the sociomatrix
       j <- j + 1
@@ -147,8 +147,10 @@ comp_distances <- function(
     if(mle == TRUE) {
     positions_model <- models[[i]]$mle$Z
     } else warning("Have you fitted with mle?")
-  distance_model <- as.matrix(dist(positions_model)) # fitted distances
-  # auf 0-1 scalen fehlt noch
+  distance_model <- positions_model %>% # fitted distances
+                      dist() %>%
+                      as.matrix()#/maximum
+                      
   diff_matrix <- distance_model - distance_network
   difference <- sqrt(
     sum(
