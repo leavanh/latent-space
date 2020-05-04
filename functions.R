@@ -1,17 +1,27 @@
 ### All the self-defined functions I use
 
-## rsphere(n, dim, r)
+## rsphere(n, dim, distribution, r)
 # generate random points within a sphere ---------------------------------------
 
 rsphere <- function(
   n,  # number of points to generate
   dim = 2,  # dimension in which to generate sphere
+  distribution = "unif", # distribution to use
   r = 0.5   # radius of the sphere
 ) 
 {
   points <- as.data.frame(matrix(NA, nrow = 1, ncol = dim + 1))
   while(nrow(points) < n + 1) {
-    point <- runif(dim, min = -0.5, max = 0.5) # point within cube
+    
+    # use the distribution
+    if(distribution == "unif") { 
+      point <- runif(dim, min = -0.5, max = 0.5) # point within cube
+    } else if(distribution == "normal") {
+      point <- rnorm(dim, mean = 0, sd = 0.5)
+    } else if(distribution == "exponential") {
+      point <- rexp(dim, rate = 2) # always positive ! have to shift center!
+    } else warning("Use a valid distribution")
+    
     dist <- norm(point, type = "2") # distance to center
     if(dist <= r) { # only keep points in sphere
       points <- rbind(points, c(point, dist))
@@ -118,7 +128,7 @@ gen_fit_all <- function(
   model_list <- vector(mode = "list", length = length(n)) # empty list models
   
   for(i in 1:length(n)) {
-    points <- rsphere(n = n[i], dim = dim)
+    points <- rsphere(n = n[i], dim = dim, ...)
     network <- gen_network(points)
     models <- fit_models(network, ...)
     model_list[[i]] <- models # add to list
