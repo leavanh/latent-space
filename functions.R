@@ -16,16 +16,25 @@ rsphere <- function(
     # use the distribution
     if(distribution == "unif") { 
       point <- runif(dim, min = -0.5, max = 0.5) # point within cube
+      dist <- norm(point, type = "2") # distance to center
+      if(dist <= r) { # only keep points in sphere
+        points <- rbind(points, c(point, dist))
+      }
     } else if(distribution == "normal") {
       point <- rnorm(dim, mean = 0, sd = 0.5)
-    } else if(distribution == "exponential") {
-      point <- rexp(dim, rate = 2) # always positive ! have to shift center!
+      dist <- norm(point, type = "2") # distance to center
+      if(dist <= r) { # only keep points in sphere
+        points <- rbind(points, c(point, dist))
+      }
+    } else if(distribution == "exponential") { 
+      point <- rexp(dim, rate = 4) # always positive -> shift center (falsche Lösung)
+      dist <- dist(rbind( # distance to shifted center
+        point,
+        rep(r, times = dim))) # shifted center
+      if(dist <= r) { # only keep points in sphere
+        points <- rbind(points, c(point, dist))
+      }
     } else warning("Use a valid distribution")
-    
-    dist <- norm(point, type = "2") # distance to center
-    if(dist <= r) { # only keep points in sphere
-      points <- rbind(points, c(point, dist))
-    }
   }
   points <- points[-1,] # delete first row (full of NAs)
   rownames(points) <- 1:n # rename rows
