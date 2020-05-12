@@ -2,3 +2,5 @@
 .Rhistory
 .RData
 .Ruserdata
+simulation_normal.RData
+simulation_unif.RData
