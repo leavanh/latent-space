@@ -99,7 +99,7 @@ gen_network <- function(
 
 fit_models <- function(
   net_list, # the network list gen_network returns
-  ...
+  tofit = "mle"
   )
 {
   # retrieve all important information from net_list
@@ -110,10 +110,9 @@ fit_models <- function(
   model_list <- vector(mode = "list", length = dim - 1) # empty list
   
   for(i in 2:dim) {
-    model <- ergmm(network ~ euclidean(d = i), ...) # fit model
+    model <- ergmm(network ~ euclidean(d = i), tofit = tofit) # fit model
     model_list[[i-1]] <- model # add to list
     names(model_list)[i-1] <- paste(i, "dim", "fit", sep = "_") # name
-    i <- i + 1
   }
   return(list(
     models = model_list,
