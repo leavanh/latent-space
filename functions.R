@@ -1,21 +1,40 @@
 ### All the self-defined functions I use
 
-## rsphere(n, dim, r)
+## rsphere(n, dim, distribution, r)
 # generate random points within a sphere ---------------------------------------
 
 rsphere <- function(
   n,  # number of points to generate
   dim = 2,  # dimension in which to generate sphere
+  distribution = "unif", # distribution to use
   r = 0.5   # radius of the sphere
 ) 
 {
   points <- as.data.frame(matrix(NA, nrow = 1, ncol = dim + 1))
   while(nrow(points) < n + 1) {
-    point <- runif(dim, min = -0.5, max = 0.5) # point within cube
-    dist <- norm(point, type = "2") # distance to center
-    if(dist <= r) { # only keep points in sphere
-      points <- rbind(points, c(point, dist))
-    }
+    
+    # use the distribution
+    if(distribution == "unif") { 
+      point <- runif(dim, min = -0.5, max = 0.5) # point within cube
+      dist <- norm(point, type = "2") # distance to center
+      if(dist <= r) { # only keep points in sphere
+        points <- rbind(points, c(point, dist))
+      }
+    } else if(distribution == "normal") {
+      point <- rnorm(dim, mean = 0, sd = 0.5)
+      dist <- norm(point, type = "2") # distance to center
+      if(dist <= r) { # only keep points in sphere
+        points <- rbind(points, c(point, dist))
+      }
+    } else if(distribution == "exponential") { 
+      point <- rexp(dim, rate = 4) # always positive -> shift center (falsche Lösung)
+      dist <- dist(rbind( # distance to shifted center
+        point,
+        rep(r, times = dim))) # shifted center
+      if(dist <= r) { # only keep points in sphere
+        points <- rbind(points, c(point, dist))
+      }
+    } else warning("Use a valid distribution")
   }
   points <- points[-1,] # delete first row (full of NAs)
   rownames(points) <- 1:n # rename rows
@@ -44,7 +63,7 @@ gen_network <- function(
   
   for(i in 1:n) {
     for(j in 1:n) {
-      tie_prob <- distance[i,j] # get prob for a tie
+      tie_prob <- 1- distance[i,j] # get prob for a tie
       tie <- rbernoulli(1, tie_prob) # generate a tie
       sociomatrix[i,j] <- tie # add to the sociomatrix
       j <- j + 1
@@ -118,7 +137,7 @@ gen_fit_all <- function(
   model_list <- vector(mode = "list", length = length(n)) # empty list models
   
   for(i in 1:length(n)) {
-    points <- rsphere(n = n[i], dim = dim)
+    points <- rsphere(n = n[i], dim = dim, ...)
     network <- gen_network(points)
     models <- fit_models(network, ...)
     model_list[[i]] <- models # add to list
@@ -127,6 +146,41 @@ gen_fit_all <- function(
   }
   
   return(model_list)
+}
+
+## -----------------------------------------------------------------------------
+
+## comp_distances()
+# get the difference between the real and the fitted distances -----------------
+
+comp_distances <- function(
+  network, # true network
+  models, # models too compare with (a list)
+  mle = TRUE # fitted using mle?
+  )
+{
+  n_models <- length(models)
+  difference_list <- vector(mode = "list", length = n_models) # empty list
+  distance_network <- network$probabilities # true distances
+  for(i in 1:n_models) {
+    if(mle == TRUE) {
+    positions_model <- models[[i]]$mle$Z
+    } else warning("Have you fitted with mle?")
+  distance_model <- as.matrix(dist(positions_model)) # fitted distances
+  distance_model_s <- distance_model/max(distance_model) # scale
+                      
+  diff_matrix <- distance_model_s - distance_network
+  difference <- sqrt(
+    sum(
+      diff_matrix*diff_matrix
+      )
+  )
+  difference_list[[i]] <- difference # add to list
+  names(difference_list)[i] <- c(
+    paste(names(models)[i], "difference", sep = "_")) # name
+  i = i + 1
+  }
+  return(difference_list)
 }
 
 ## -----------------------------------------------------------------------------
