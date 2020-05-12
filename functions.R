@@ -128,22 +128,28 @@ fit_models <- function(
 
 gen_fit_all <- function(
   n, # vector of number of nodes
-  dim, # up to what dimension
+  dim, # vector of dimensions
+  tofit = "mle", # use mle
   ...
 ) 
 {
-  model_list <- vector(mode = "list", length = length(n)) # empty list models
+  # empty list models
+  end_model_list <- vector(mode = "list", length = length(n)) 
+  help_model_list <-  vector(mode = "list", length = length(dim)) 
   
   for(i in 1:length(n)) {
-    points <- rsphere(n = n[i], dim = dim, ...)
-    network <- gen_network(points)
-    models <- fit_models(network, ...)
-    model_list[[i]] <- models # add to list
-    names(model_list)[i] <- c(paste(n[i], "nodes", dim, "dim", sep = "_")) # name
-    i = i + 1
+    for(j in 1:length(dim)) {
+      points <- rsphere(n = n[i], dim = dim[j], ...)
+      network <- gen_network(points)
+      models <- fit_models(network, tofit = tofit)
+      help_model_list[[j]] <- models # add to list
+      names(help_model_list)[j] <- c(paste(n[i], "nodes", dim[j], "dim",
+                                           sep = "_")) # name
+    }
+    end_model_list[[i]] <- help_model_list # add to list
+    names(end_model_list)[i] <- c(paste(n[i], "nodes", sep = "_")) # name
   }
-  
-  return(model_list)
+  return(end_model_list)
 }
 
 ## -----------------------------------------------------------------------------
@@ -176,7 +182,6 @@ comp_distances <- function(
   difference_list[[i]] <- difference # add to list
   names(difference_list)[i] <- c(
     paste(names(models)[i], "difference", sep = "_")) # name
-  i = i + 1
   }
   return(difference_list)
 }
