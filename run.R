@@ -16,8 +16,9 @@ set.seed(09101999)
 # make the networks
 # 10, 50 and 100 nodes
 # up to 6 dimensions
+# use mle
 
-# simulation <- gen_fit_all(n = c(10, 50, 100), dim = 6)
+# simulation <- gen_fit_all(n = c(10, 50, 100), dim = 6, tofit = "mle")
 
 # save(simulation, file = "simulation.RData") # save
 load("simulation.RData") # load
