@@ -66,9 +66,7 @@ gen_network <- function(
       tie_prob <- 1- distance[i,j] # get prob for a tie
       tie <- rbernoulli(1, tie_prob) # generate a tie
       sociomatrix[i,j] <- tie # add to the sociomatrix
-      j <- j + 1
     }
-    i <- i + 1
   }
   
   # if we want undirected ties, we use only the lower triangle of the 
