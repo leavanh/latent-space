@@ -21,10 +21,10 @@ set.seed(09101999)
 
 start_time <- print(Sys.time())
 
-simulation_unif <- gen_fit_all(n = c(10, 50, 100), dim = c (2, 4, 6, 8), 
-                               distribution = "unif")
-simulation_normal <- gen_fit_all(n = c(10, 50, 100), dim = c (2, 4, 6, 8), 
-                               distribution = "normal")
+simulation_unif <- gen_fit_all(n = c(10, 50, 100), dim = c (2, 4, 6), 
+                               distribution = "unif", tofit = "mle")
+simulation_normal <- gen_fit_all(n = c(10, 50, 100), dim = c (2, 4, 6), 
+                               distribution = "normal", tofit = "mle")
 
 save(simulation_unif, file = "simulation_unif.RData") # save
 save(simulation_normal, file = "simulation_normal.RData")
@@ -32,7 +32,7 @@ save(simulation_normal, file = "simulation_normal.RData")
 end_time <- print(Sys.time())
 print(end_time-start_time)
 
-load("simulation.RData") # load
+#load("simulation.RData") # load
 
-comp_distances(simulation$`100_nodes_6_dim`$network, 
-               simulation$`100_nodes_6_dim`$models)
+#comp_distances(simulation$`100_nodes_6_dim`$network, 
+#               simulation$`100_nodes_6_dim`$models)
