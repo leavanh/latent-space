@@ -50,16 +50,9 @@ gen_network <- function(
   # get the distances between all points
   distance <- as.matrix(dist(subset(points, select = - c(distance))))
   
-  # generate empty sociomatrix
-  sociomatrix <- matrix(NA, nrow = nrow(points), ncol = nrow(points))
+  gen_tie <- function(distance) rbernoulli(1, 1 - distance)
   
-  for(i in 1:n) {
-    for(j in 1:n) {
-      tie_prob <- 1 - distance[i,j] # get prob for a tie
-      tie <- rbernoulli(1, tie_prob) # generate a tie
-      sociomatrix[i,j] <- tie # add to the sociomatrix
-    }
-  }
+  sociomatrix <- apply(distance, c(1, 2), gen_tie) # generate the sociomatrix
   
   diag(sociomatrix) <- FALSE # diagonal has no ties
   
@@ -93,7 +86,7 @@ gen_network <- function(
 
 fit_models <- function(
   net_list, # the network list gen_network returns
-  tofit = "mle"
+  ...
   )
 {
   # retrieve all important information from net_list
@@ -104,10 +97,11 @@ fit_models <- function(
   model_list <- vector(mode = "list", length = dim - 1) # empty list
   
   for(i in 2:dim) {
-    model <- ergmm(network ~ euclidean(d = i), tofit = tofit) # fit model
+    model <- ergmm(network ~ euclidean(d = i), ...) # fit model
     model_list[[i-1]] <- model # add to list
     names(model_list)[i-1] <- paste(i, "dim", "fit", sep = "_") # name
   }
+  
   return(list(
     models = model_list,
     network = net_list
