@@ -26,14 +26,6 @@ rsphere <- function(
       if(dist <= r) { # only keep points in sphere
         points <- rbind(points, c(point, dist))
       }
-    } else if(distribution == "exponential") { 
-      point <- rexp(dim, rate = 4) # always positive -> shift center (falsche Lösung)
-      dist <- dist(rbind( # distance to shifted center
-        point,
-        rep(r, times = dim))) # shifted center
-      if(dist <= r) { # only keep points in sphere
-        points <- rbind(points, c(point, dist))
-      }
     } else warning("Use a valid distribution")
   }
   points <- points[-1,] # delete first row (full of NAs)
@@ -63,11 +55,13 @@ gen_network <- function(
   
   for(i in 1:n) {
     for(j in 1:n) {
-      tie_prob <- 1- distance[i,j] # get prob for a tie
+      tie_prob <- 1 - distance[i,j] # get prob for a tie
       tie <- rbernoulli(1, tie_prob) # generate a tie
       sociomatrix[i,j] <- tie # add to the sociomatrix
     }
   }
+  
+  diag(sociomatrix) <- FALSE # diagonal has no ties
   
   # if we want undirected ties, we use only the lower triangle of the 
   # sociomatrix and 'flip' it
