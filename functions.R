@@ -173,7 +173,7 @@ comp_distances <- function(
   distance_network <- network$probabilities # true distances
   for(i in 1:n_models) {
     if(mle == TRUE) {
-    positions_model <- models[[i]]$mle$Z
+    positions_model <- models[[i]]$model$mle$Z
     } else warning("Have you fitted with mle?")
   distance_model <- as.matrix(dist(positions_model)) # fitted distances
   distance_model_s <- distance_model/max(distance_model) # scale
