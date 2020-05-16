@@ -33,7 +33,7 @@ rsphere <- function(
     }
   } else if(distribution == "groups") {
     g_means <- as.data.frame(rmvnorm(n_groups, mean = rep(0, dim),
-                                     sigma = 2*sd*diag(dim))) # get groupmeans
+                                     sigma = sd*diag(dim))) # get groupmeans
     g_sd <- 0.1*sd/n_groups # get sd
     while(nrow(points) < n + 1) {
       mean <- unlist(sample_n(g_means, 1)) # which group? 

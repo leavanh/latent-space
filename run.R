@@ -24,11 +24,26 @@ start_time <- print(Sys.time())
 
 simulation_unif <- gen_fit_all(n = c(20, 50, 100), dim = c (2, 4, 6, 8), 
                                distribution = "unif", tofit = "mle")
+save(simulation_unif, file = "simulation_unif.RData") # save
+
+end_time <- print(Sys.time())
+print(end_time-start_time)
+
+start_time <- print(Sys.time())
+
 simulation_normal <- gen_fit_all(n = c(20, 50, 100), dim = c (2, 4, 6, 8), 
                                distribution = "normal", tofit = "mle")
-
-save(simulation_unif, file = "simulation_unif.RData") # save
 save(simulation_normal, file = "simulation_normal.RData")
+
+end_time <- print(Sys.time())
+print(end_time-start_time)
+
+start_time <- print(Sys.time())
+
+simulation_normal <- gen_fit_all(n = c(20, 50, 100), dim = c (2, 4, 6, 8), 
+                                 distribution = "groups", n_groups = 3,
+                                 tofit = "mle")
+save(simulation_normal, file = "simulation_groups.RData")
 
 end_time <- print(Sys.time())
 print(end_time-start_time)
