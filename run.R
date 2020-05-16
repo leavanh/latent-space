@@ -48,7 +48,11 @@ save(simulation_normal, file = "simulation_groups.RData")
 end_time <- Sys.time()
 time_diff_groups <- end_time-start_time
 
-load("simulation.RData") # load
+time_diff_unif
+time_diff_normal
+time_diff_groups
 
-comp_distances(simulation$`100_nodes_6_dim`$network, 
-               simulation$`100_nodes_6_dim`$models)
+# load("simulation.RData") # load
+# 
+# comp_distances(simulation$`100_nodes_6_dim`$network, 
+#                simulation$`100_nodes_6_dim`$models)
