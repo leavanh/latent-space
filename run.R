@@ -3,6 +3,7 @@
 
 library(latentnet)
 library(tidyverse)
+library(mvtnorm)
 
 # load functions
 

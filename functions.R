@@ -15,13 +15,13 @@ rsphere <- function(
     
     # use the distribution
     if(distribution == "unif") { 
-      point <- runif(dim, min = -0.5, max = 0.5) # point within cube
+      point <- runif(dim, min = -r, max = r) # point within cube
       dist <- norm(point, type = "2") # distance to center
       if(dist <= r) { # only keep points in sphere
         points <- rbind(points, c(point, dist))
       }
     } else if(distribution == "normal") {
-      point <- rnorm(dim, mean = 0, sd = 0.5)
+      point <- rmvnorm(1, mean = rep(0, dim), sigma = r*diag(dim))
       dist <- norm(point, type = "2") # distance to center
       if(dist <= r) { # only keep points in sphere
         points <- rbind(points, c(point, dist))
