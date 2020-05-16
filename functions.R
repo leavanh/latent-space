@@ -1,33 +1,49 @@
 ### All the self-defined functions I use
 
-## rsphere(n, dim, distribution, r)
+## rsphere()
 # generate random points within a sphere ---------------------------------------
 
 rsphere <- function(
   n,  # number of points to generate
   dim = 2,  # dimension in which to generate sphere
   distribution = "unif", # distribution to use
+  sd = 0.025, # if distribution not unif whats the sd
+  n_groups = 3, # if groups, how many?
   r = 0.5   # radius of the sphere
 ) 
 {
   points <- as.data.frame(matrix(NA, nrow = 1, ncol = dim + 1))
-  while(nrow(points) < n + 1) {
-    
-    # use the distribution
-    if(distribution == "unif") { 
+  
+  # use the distribution
+  if(distribution == "unif") { 
+    while(nrow(points) < n + 1) {
       point <- runif(dim, min = -r, max = r) # point within cube
       dist <- norm(point, type = "2") # distance to center
       if(dist <= r) { # only keep points in sphere
         points <- rbind(points, c(point, dist))
       }
-    } else if(distribution == "normal") {
-      point <- rmvnorm(1, mean = rep(0, dim), sigma = r*diag(dim))
+    }
+  } else if(distribution == "normal") {
+    while(nrow(points) < n + 1) {
+      point <- rmvnorm(1, mean = rep(0, dim), sigma = sd*diag(dim))
       dist <- norm(point, type = "2") # distance to center
       if(dist <= r) { # only keep points in sphere
         points <- rbind(points, c(point, dist))
       }
-    } else warning("Use a valid distribution")
-  }
+    }
+  } else if(distribution == "groups") {
+    g_means <- as.data.frame(rmvnorm(n_groups, mean = rep(0, dim),
+                                     sigma = 2*sd*diag(dim))) # get groupmeans
+    g_sd <- 0.1*sd/n_groups # get sd
+    while(nrow(points) < n + 1) {
+      mean <- unlist(sample_n(g_means, 1)) # which group? 
+      point <- rmvnorm(1, mean = mean, sigma = g_sd*diag(dim))
+      dist <- norm(point, type = "2") # distance to center
+      if(dist <= r) { # only keep points in sphere
+        points <- rbind(points, c(point, dist))
+      }
+    }
+  } else warning("Use a valid distribution")
   points <- points[-1,] # delete first row (full of NAs)
   rownames(points) <- 1:n # rename rows
   colnames(points) <- c(1:dim, "distance") # rename columns
@@ -37,7 +53,7 @@ rsphere <- function(
 ## -----------------------------------------------------------------------------
 
 
-## gen_network(points, directed)
+## gen_network()
 # generate a network out of the points -----------------------------------------
 
 gen_network <- function(
