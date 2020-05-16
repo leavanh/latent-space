@@ -113,10 +113,10 @@ fit_models <- function(
   model_list <- vector(mode = "list", length = dim - 1) # empty list
   
   for(i in 2:dim) {
-    start <- print(Sys.time())
+    start <- Sys.time()
     model <- ergmm(network ~ euclidean(d = i), ...) # fit model
-    end <- print(Sys.time())
-    model_list[[i-1]] <- list(model = model, time = print(end-start))  # add to list
+    end <- Sys.time()
+    model_list[[i-1]] <- list(model = model, time = end-start)  # add to list
     names(model_list)[i-1] <- paste(i, "dim", "fit", sep = "_") # name
   }
   
