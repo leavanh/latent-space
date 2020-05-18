@@ -16,7 +16,7 @@ rsphere <- function(
   
   # use the distribution
   if(distribution == "unif") { 
-    while(nrow(points) < n + 1) {
+    while(nrow(points_df) < n + 1) {
       point <- runif(dim, min = -r, max = r) # point within cube
       dist <- norm(point, type = "2") # distance to center
       if(dist <= r) { # only keep points in sphere
@@ -29,19 +29,18 @@ rsphere <- function(
       max_dist <- max(dist)
       points <- points/(max_dist*2) # scale the points, so the max dist is 1
       points_df <- rbind(points_df, points)
-    }
   } else if(distribution == "groups") {
-    g_means <- as.data.frame(rmvnorm(n_groups, mean = rep(0, dim),
-                                     sigma = sd*diag(dim))) # get groupmeans
-    g_sd <- 0.1*sd/n_groups # get sd
-    while(nrow(points) < n + 1) {
-      mean <- unlist(sample_n(g_means, 1)) # which group? 
-      point <- rmvnorm(1, mean = mean, sigma = g_sd*diag(dim))
-      dist <- norm(point, type = "2") # distance to center
-      if(dist <= r) { # only keep points in sphere
-        points <- rbind(points, c(point, dist))
+      g_means <- as.data.frame(rmvnorm(n_groups, mean = rep(0, dim),
+                                       sigma = sd*diag(dim))) # get groupmeans
+      g_sd <- sd/n_groups # get sd
+      while(nrow(points_df) < n + 1) {
+        mean <- unlist(sample_n(g_means, 1)) # which group? 
+        point <- rmvnorm(1, mean = mean, sigma = g_sd*diag(dim))
+        points_df <- rbind(points_df, point)
       }
-    }
+      dist <- apply(points_df, MARGIN = 1, norm, type = "2") # distance to center
+      max_dist <- max(dist, na.rm = TRUE)
+      points_df <- points_df/(max_dist*2) # scale the points, so the max dist is 1
   } else warning("Use a valid distribution")
   points_df <- points_df[-1,] # delete first row (full of NAs)
   rownames(points_df) <- 1:n # rename rows
