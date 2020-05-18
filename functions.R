@@ -9,6 +9,7 @@ rsphere <- function(
   distribution = "unif", # distribution to use
   sd = 1, # if distribution not unif whats the sd
   n_groups = 3, # if groups, how many?
+  sd_group = 0.1*sd/n_groups, # sd for each group
   r = 0.5   # radius of the sphere (only important for unif)
 ) 
 {
@@ -32,10 +33,9 @@ rsphere <- function(
   } else if(distribution == "groups") {
       g_means <- as.data.frame(rmvnorm(n_groups, mean = rep(0, dim),
                                        sigma = sd*diag(dim))) # get groupmeans
-      g_sd <- sd/n_groups # get sd
       while(nrow(points_df) < n + 1) {
         mean <- unlist(sample_n(g_means, 1)) # which group? 
-        point <- rmvnorm(1, mean = mean, sigma = g_sd*diag(dim))
+        point <- rmvnorm(1, mean = mean, sigma = sd_group*diag(dim))
         points_df <- rbind(points_df, point)
       }
       dist <- apply(points_df, MARGIN = 1, norm, type = "2") # distance to center
