@@ -25,10 +25,10 @@ rsphere <- function(
     }
   } else if(distribution == "normal") {
       points <- rmvnorm(n, mean = rep(0, dim), sigma = sd*diag(dim))
-      dist <- norm(point, type = "2") # distance to center
-      if(dist <= r) { # only keep points in sphere
-        points_df <- rbind(points_df, points)
-      }
+      dist <- apply(points, MARGIN = 1, norm, type = "2") # distance to center
+      max_dist <- max(dist)
+      points <- points/(max_dist*2) # scale the points, so the max dist is 1
+      points_df <- rbind(points_df, points)
     }
   } else if(distribution == "groups") {
     g_means <- as.data.frame(rmvnorm(n_groups, mean = rep(0, dim),
