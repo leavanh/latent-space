@@ -9,8 +9,7 @@ rsphere <- function(
   distribution = "unif", # distribution to use
   sd = 1, # if distribution not unif whats the sd
   n_groups = 3, # if groups, how many?
-  sd_group = 0.1*sd/n_groups, # sd for each group
-  r = 0.5   # radius of the sphere (only important for unif)
+  sd_group = 0.1*sd/n_groups # sd for each group
 ) 
 {
   points_df <- as.data.frame(matrix(NA, nrow = 1, ncol = dim))
@@ -18,9 +17,9 @@ rsphere <- function(
   # use the distribution
   if(distribution == "unif") { 
     while(nrow(points_df) < n + 1) {
-      point <- runif(dim, min = -r, max = r) # point within cube
+      point <- runif(dim, min = -0.5, max = 0.5) # point within cube
       dist <- norm(point, type = "2") # distance to center
-      if(dist <= r) { # only keep points in sphere
+      if(dist <= 0.5) { # only keep points in sphere
         points_df <- rbind(points_df, point)
       }
     }
@@ -30,7 +29,7 @@ rsphere <- function(
       max_dist <- max(dist)
       points <- points/(max_dist*2) # scale the points, so the max dist is 1
       points_df <- rbind(points_df, points)
-  } else if(distribution == "groups") {
+  } else if(distribution == "groups") { # besser multimodal hier zieht man erst mean
       g_means <- as.data.frame(rmvnorm(n_groups, mean = rep(0, dim),
                                        sigma = sd*diag(dim))) # get groupmeans
       while(nrow(points_df) < n + 1) {
