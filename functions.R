@@ -7,12 +7,12 @@ rsphere <- function(
   n,  # number of points to generate
   dim = 2,  # dimension in which to generate sphere
   distribution = "unif", # distribution to use
-  sd = 0.025, # if distribution not unif whats the sd
+  sd = 1, # if distribution not unif whats the sd
   n_groups = 3, # if groups, how many?
-  r = 0.5   # radius of the sphere
+  r = 0.5   # radius of the sphere (only important for unif)
 ) 
 {
-  points <- as.data.frame(matrix(NA, nrow = 1, ncol = dim + 1))
+  points_df <- as.data.frame(matrix(NA, nrow = 1, ncol = dim))
   
   # use the distribution
   if(distribution == "unif") { 
@@ -20,15 +20,14 @@ rsphere <- function(
       point <- runif(dim, min = -r, max = r) # point within cube
       dist <- norm(point, type = "2") # distance to center
       if(dist <= r) { # only keep points in sphere
-        points <- rbind(points, c(point, dist))
+        points_df <- rbind(points_df, point)
       }
     }
   } else if(distribution == "normal") {
-    while(nrow(points) < n + 1) {
-      point <- rmvnorm(1, mean = rep(0, dim), sigma = sd*diag(dim))
+      points <- rmvnorm(n, mean = rep(0, dim), sigma = sd*diag(dim))
       dist <- norm(point, type = "2") # distance to center
       if(dist <= r) { # only keep points in sphere
-        points <- rbind(points, c(point, dist))
+        points_df <- rbind(points_df, points)
       }
     }
   } else if(distribution == "groups") {
@@ -44,10 +43,10 @@ rsphere <- function(
       }
     }
   } else warning("Use a valid distribution")
-  points <- points[-1,] # delete first row (full of NAs)
-  rownames(points) <- 1:n # rename rows
-  colnames(points) <- c(1:dim, "distance") # rename columns
-  return(points)
+  points_df <- points_df[-1,] # delete first row (full of NAs)
+  rownames(points_df) <- 1:n # rename rows
+  colnames(points_df) <- c(1:dim) # rename columns
+  return(points_df)
 }
 
 ## -----------------------------------------------------------------------------
@@ -64,7 +63,7 @@ gen_network <- function(
   n <- nrow(points) # get number of nodes
   
   # get the distances between all points
-  distance <- as.matrix(dist(subset(points, select = - c(distance))))
+  distance <- as.matrix(dist(points))
   
   gen_tie <- function(distance) rbernoulli(1, 1 - distance)
   
@@ -170,7 +169,7 @@ comp_distances <- function(
 {
   n_models <- length(models)
   difference_list <- vector(mode = "list", length = n_models) # empty list
-  distance_network <- network$probabilities # true distances
+  distance_network <- 1 - network$probabilities # true distances
   for(i in 1:n_models) {
     if(mle == TRUE) {
     positions_model <- models[[i]]$model$mle$Z
