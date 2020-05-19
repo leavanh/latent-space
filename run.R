@@ -52,8 +52,8 @@ time_diff_unif
 time_diff_normal
 time_diff_groups
 
-# load("simulation.RData") # load
-# 
+# load("simulation_unif.RData") # load
+
 comp_distances(simulation_unif$`20_nodes`$`20_nodes_8_dim`$network,
                simulation_unif$`20_nodes`$`20_nodes_8_dim`$models)
 comp_distances(simulation_unif$`20_nodes`$`20_nodes_6_dim`$network,

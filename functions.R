@@ -166,7 +166,7 @@ comp_distances <- function(
   )
 {
   n_models <- length(models)
-  difference_list <- vector(mode = "list", length = n_models) # empty list
+  differences <- vector(mode = "integer", length = n_models) # empty vector
   distance_network <- 1 - network$probabilities # true distances
   for(i in 1:n_models) {
     if(mle == TRUE) {
@@ -181,11 +181,11 @@ comp_distances <- function(
       diff_matrix*diff_matrix
       )
   )
-  difference_list[[i]] <- difference # add to list
-  names(difference_list)[i] <- c(
+  differences[[i]] <- difference # add to list
+  names(differences)[i] <- c(
     paste(names(models)[i], "difference", sep = "_")) # name
   }
-  return(difference_list)
+  return(differences)
 }
 
 ## -----------------------------------------------------------------------------
