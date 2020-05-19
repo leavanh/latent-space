@@ -184,10 +184,10 @@ comp_distance <- function(
 
 ## -----------------------------------------------------------------------------
 
-## clean_df()
+## prod_df()
 # organize the results in a clean way ------------------------------------------
 
-clean_df <- function(
+prod_df <- function(
   simulation, # a list with simulated networks and the fitted models
   distribution # you have to manually enter the distribution
 ) {
