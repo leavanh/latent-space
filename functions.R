@@ -156,22 +156,19 @@ gen_fit_all <- function(
 
 ## -----------------------------------------------------------------------------
 
-## comp_distances()
-# get the difference between the real and the fitted distances -----------------
+## comp_distance()
+# get the difference between the real and the fitted distance -----------------
 
-comp_distances <- function(
+comp_distance <- function(
   network, # true network
-  models, # models too compare with (a list)
+  models, # model too compare with
   mle = TRUE # fitted using mle?
   )
 {
-  n_models <- length(models)
-  differences <- vector(mode = "integer", length = n_models) # empty vector
   distance_network <- 1 - network$probabilities # true distances
-  for(i in 1:n_models) {
-    if(mle == TRUE) {
-    positions_model <- models[[i]]$model$mle$Z
-    } else warning("Have you fitted with mle?")
+  if(mle == TRUE) {
+    positions_model <- model$mle$Z
+  } else warning("Have you fitted with mle?")
   distance_model <- as.matrix(dist(positions_model)) # fitted distances
   distance_model_s <- distance_model/max(distance_model) # scale
                       
@@ -181,11 +178,8 @@ comp_distances <- function(
       diff_matrix*diff_matrix
       )
   )
-  differences[[i]] <- difference # add to list
-  names(differences)[i] <- c(
-    paste(names(models)[i], "difference", sep = "_")) # name
-  }
-  return(differences)
+  
+  return(difference)
 }
 
 ## -----------------------------------------------------------------------------
@@ -194,9 +188,25 @@ comp_distances <- function(
 # organize the results in a clean way ------------------------------------------
 
 clean_df <- function(
-  simulation # a list with simulated networks and the fitted models
+  simulation, # a list with simulated networks and the fitted models
+  distribution # you have to manually enter the distribution
 ) {
-  distribution <- 
+  
+  for(id_nodes in 1:length(simulation)) { # go through all diff nodes
+    nodes <- str_extract(names(simulation[id_nodes]), pattern = "^\\d+")
+    for(id_org_dim in 1:length(simulation[[id_nodes]])) { # all diff org dim
+      org_dim <- str_extract(names(simulation[[id_nodes]][id_org_dim]),
+                             pattern = "(?<=_)\\d+(?=_dim)")
+      for(id_fit_dim in 
+          1:length(simulation[[id_nodes]][[id_org_dim]]$models[])) { # fit dim
+        fit_dim <- str_extract(
+          names(simulation[[id_nodes]][[id_org_dim]]$models[id_fit_dim]),
+                            pattern = "^\\d+(?=_dim)")
+        time <- simulation[[id_nodes]][[id_org_dim]]$models[[id_fit_dim]]$time
+        diff <-
+      }
+    }
+  }
   
   return(df)
 }
