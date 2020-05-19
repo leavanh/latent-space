@@ -189,3 +189,17 @@ comp_distances <- function(
 }
 
 ## -----------------------------------------------------------------------------
+
+## clean_df()
+# organize the results in a clean way ------------------------------------------
+
+clean_df <- function(
+  simulation # a list with simulated networks and the fitted models
+) {
+  distribution <- 
+  
+  return(df)
+}
+
+
+## -----------------------------------------------------------------------------
