@@ -161,7 +161,7 @@ gen_fit_all <- function(
 
 comp_distance <- function(
   network, # true network
-  models, # model too compare with
+  model, # model too compare with
   mle = TRUE # fitted using mle?
   )
 {
@@ -192,6 +192,14 @@ clean_df <- function(
   distribution # you have to manually enter the distribution
 ) {
   
+  df <- data.frame(distribution = character(),
+                   nodes = character(), 
+                   org_dim = character(),
+                   fit_dim = character(), 
+                   time = numeric(), 
+                   distance_diff = integer(), 
+                   stringsAsFactors=FALSE)
+  
   for(id_nodes in 1:length(simulation)) { # go through all diff nodes
     nodes <- str_extract(names(simulation[id_nodes]), pattern = "^\\d+")
     for(id_org_dim in 1:length(simulation[[id_nodes]])) { # all diff org dim
@@ -203,11 +211,16 @@ clean_df <- function(
           names(simulation[[id_nodes]][[id_org_dim]]$models[id_fit_dim]),
                             pattern = "^\\d+(?=_dim)")
         time <- simulation[[id_nodes]][[id_org_dim]]$models[[id_fit_dim]]$time
-        diff <-
+        n <- simulation[[id_nodes]][[id_org_dim]]$network
+        m <- simulation[[id_nodes]][[id_org_dim]]$models[[id_fit_dim]]$model
+        diff <- comp_distance(n, m)
+        
+        # put row together and add to df
+        df <- rbind(df, 
+                    cbind(distribution, nodes, org_dim, fit_dim, time, diff))
       }
     }
   }
-  
   return(df)
 }
 
