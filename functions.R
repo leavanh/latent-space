@@ -170,7 +170,8 @@ comp_distance <- function(
     positions_model <- model$mle$Z
   } else warning("Have you fitted with mle?")
   distance_model <- as.matrix(dist(positions_model)) # fitted distances
-  distance_model_s <- distance_model/max(distance_model) # scale
+  distance_model_s <- max(distance_network)*distance_model/max(distance_model) 
+  # scale
                       
   diff_matrix <- distance_model_s - distance_network
   difference <- sqrt(
