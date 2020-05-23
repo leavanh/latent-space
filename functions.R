@@ -86,7 +86,7 @@ gen_network <- function(
               n = n,
               probabilities = 1 - distance,
               sociomatrix = sociomatrix,
-              dimensions = length(points) - 1
+              dimensions = length(points)
   ))
 }
 
