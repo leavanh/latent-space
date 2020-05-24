@@ -193,13 +193,7 @@ prod_df <- function(
   distribution # you have to manually enter the distribution
 ) {
   
-  df <- data.frame(distribution = character(),
-                   nodes = character(), 
-                   org_dim = character(),
-                   fit_dim = character(), 
-                   time = numeric(), 
-                   distance_diff = integer(), 
-                   stringsAsFactors=FALSE)
+  df <- data.frame(matrix(vector(), 0, 6), stringsAsFactors = FALSE)
   
   for(id_nodes in 1:length(simulation)) { # go through all diff nodes
     nodes <- str_extract(names(simulation[id_nodes]), pattern = "^\\d+")
@@ -214,14 +208,23 @@ prod_df <- function(
         time <- simulation[[id_nodes]][[id_org_dim]]$models[[id_fit_dim]]$time
         n <- simulation[[id_nodes]][[id_org_dim]]$network
         m <- simulation[[id_nodes]][[id_org_dim]]$models[[id_fit_dim]]$model
-        diff <- comp_distance(n, m)
+        distance_diff <- comp_distance(n, m)
         
         # put row together and add to df
         df <- rbind(df, 
-                    cbind(distribution, nodes, org_dim, fit_dim, time, diff))
+                    cbind(distribution, nodes, org_dim, 
+                          fit_dim, time, distance_diff))
       }
     }
   }
+  
+  df <- transform(df, distribution = as.character(distribution),
+                  nodes = as.numeric(nodes), 
+                  org_dim = as.integer(org_dim),
+                  fit_dim = as.integer(fit_dim), 
+                  time = as.numeric(time), 
+                  distance_diff = as.numeric(distance_diff))
+  
   return(df)
 }
 
