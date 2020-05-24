@@ -218,12 +218,17 @@ prod_df <- function(
     }
   }
   
+  # make right type
   df <- transform(df, distribution = as.character(distribution),
                   nodes = as.factor(nodes), 
                   org_dim = as.factor(org_dim),
                   fit_dim = as.factor(fit_dim), 
                   time = as.numeric(time), 
                   distance_diff = as.numeric(distance_diff))
+  
+  # change nodes levels
+  
+  levels(df$nodes) <- as.character(sort(as.integer(levels(df$nodes))))
   
   return(df)
 }
