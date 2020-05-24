@@ -219,7 +219,7 @@ prod_df <- function(
   }
   
   df <- transform(df, distribution = as.character(distribution),
-                  nodes = as.numeric(nodes), 
+                  nodes = as.integer(nodes), 
                   org_dim = as.integer(org_dim),
                   fit_dim = as.integer(fit_dim), 
                   time = as.numeric(time), 
