@@ -219,9 +219,9 @@ prod_df <- function(
   }
   
   df <- transform(df, distribution = as.character(distribution),
-                  nodes = as.integer(nodes), 
-                  org_dim = as.integer(org_dim),
-                  fit_dim = as.integer(fit_dim), 
+                  nodes = as.factor(nodes), 
+                  org_dim = as.factor(org_dim),
+                  fit_dim = as.factor(fit_dim), 
                   time = as.numeric(time), 
                   distance_diff = as.numeric(distance_diff))
   
