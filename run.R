@@ -61,3 +61,6 @@ normal_df <- prod_df(simulation_normal, "normal")
 groups_df <- prod_df(simulation_groups, "groups")
 
 results_df <- bind_rows(unif_df, normal_df, groups_df)
+
+results_df$distribution <- factor(results_df$distribution, 
+                                  levels = c("unif", "normal", "groups"))
