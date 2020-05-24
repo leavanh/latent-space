@@ -30,4 +30,7 @@ for(j in 1:nlevels(unif_df$nodes)) {
     theme(plot.margin = margin(6, 0, 6, 0))
 }
 
-plot_grid(plotlist = plots, legend, nrow = 1)
+plots[[nlevels(unif_df$nodes) + 1]] <- legend
+
+plot_grid(plotlist = plots, rel_widths = c(1, 1, 1, 0.4), nrow = 1)
+
