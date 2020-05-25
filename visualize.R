@@ -10,7 +10,7 @@ ggplot(results_df,
   geom_line() +
   facet_grid(distribution ~ nodes) +
   scale_color_manual(values = diff_palette) +
-  ylim(c(0, 32)) +
+  ylim(c(0, 30)) +
   labs(title = "Results: Difference of distances",
        x = "Fitted dimension",
        y = "Difference of distances",
