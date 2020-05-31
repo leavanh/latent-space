@@ -40,13 +40,33 @@ time_diff_normal <- end_time-start_time
 
 start_time <- Sys.time()
 
-simulation_groups <- gen_fit_all(n = c(20, 50, 100), dim = c (2, 4, 6, 8),
+simulation_groups3 <- gen_fit_all(n = c(20, 50, 100), dim = c (2, 4, 6, 8),
                                  distribution = "groups", n_groups = 3,
                                  tofit = "mle")
-save(simulation_groups, file = "simulation_groups.RData")
+save(simulation_groups3, file = "simulation_groups3.RData")
 
 end_time <- Sys.time()
-time_diff_groups <- end_time-start_time
+time_diff_groups3 <- end_time-start_time
+
+start_time <- Sys.time()
+
+simulation_groups4 <- gen_fit_all(n = c(20, 50, 100), dim = c (2, 4, 6, 8),
+                                 distribution = "groups", n_groups = 4,
+                                 tofit = "mle")
+save(simulation_groups4, file = "simulation_groups4.RData")
+
+end_time <- Sys.time()
+time_diff_groups4 <- end_time-start_time
+
+start_time <- Sys.time()
+
+simulation_groups5 <- gen_fit_all(n = c(20, 50, 100), dim = c (2, 4, 6, 8),
+                                 distribution = "groups", n_groups = 5,
+                                 tofit = "mle")
+save(simulation_groups5, file = "simulation_groups5.RData")
+
+end_time <- Sys.time()
+time_diff_groups5 <- end_time-start_time
 
 time_diff_unif
 time_diff_normal
