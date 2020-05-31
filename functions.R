@@ -29,7 +29,7 @@ rsphere <- function(
       max_dist <- max(dist)
       points <- points/(max_dist*2) # scale the points, so the max dist is 1
       points_df <- rbind(points_df, points)
-  } else if(distribution == "groups") { # besser multimodal hier zieht man erst mean
+  } else if(distribution == "groups") {
       g_means <- as.data.frame(rmvnorm(n_groups, mean = rep(0, dim),
                                        sigma = sd*diag(dim))) # get groupmeans
       while(nrow(points_df) < n + 1) {
