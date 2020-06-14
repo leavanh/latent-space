@@ -18,14 +18,15 @@ rsphere <- function(
   if(distribution == "unif") { 
     while(nrow(points_df) < n + 1) {
       point <- runif(dim, min = -0.5, max = 0.5) # point within cube
-      dist <- norm(point, type = "2") # distance to center
+      dist <- dist(point, rep(0, dim), method = "manhattan") # distance to center
       if(dist <= 0.5) { # only keep points in sphere
         points_df <- rbind(points_df, point)
       }
     }
   } else if(distribution == "normal") {
       points <- rmvnorm(n, mean = rep(0, dim), sigma = sd*diag(dim))
-      dist <- apply(points, MARGIN = 1, norm, type = "2") # distance to center
+      dist <- apply(points, MARGIN = 1, dist, rep(0, dim), 
+                    method = "manhattan") # distance to center
       max_dist <- max(dist)
       points <- points/(max_dist*2) # scale the points, so the max dist is 1
       points_df <- rbind(points_df, points)
@@ -37,7 +38,10 @@ rsphere <- function(
         point <- rmvnorm(1, mean = mean, sigma = sd_group*diag(dim))
         points_df <- rbind(points_df, point)
       }
-      dist <- apply(points_df, MARGIN = 1, norm, type = "2") # distance to center
+      dist <- apply(points_df, MARGIN = 1, apply(points, MARGIN = 1, dist,
+                                                 rep(0, dim), 
+                                                 method = "manhattan")) 
+      # distance to center
       max_dist <- max(dist, na.rm = TRUE)
       points_df <- points_df/(max_dist*2) # scale the points, so the max dist is 1
   } else warning("Use a valid distribution")
