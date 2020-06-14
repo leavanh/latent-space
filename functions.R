@@ -61,7 +61,7 @@ gen_network <- function(
   n <- nrow(points) # get number of nodes
   
   # get the distances between all points
-  distance <- as.matrix(dist(points))
+  distance <- as.matrix(dist(points, method = "manhattan"))
   
   gen_tie <- function(distance) rbernoulli(1, 1 - distance)
   
@@ -169,16 +169,12 @@ comp_distance <- function(
   if(mle == TRUE) {
     positions_model <- model$mle$Z
   } else warning("Have you fitted with mle?")
-  distance_model <- as.matrix(dist(positions_model)) # fitted distances
+  distance_model <- as.matrix(dist(positions_model, method = "manhattan")) # fitted distances
   distance_model_s <- max(distance_network)*distance_model/max(distance_model) 
   # scale
                       
   diff_matrix <- distance_model_s - distance_network
-  difference <- sqrt(
-    sum(
-      diff_matrix*diff_matrix
-      )
-  )
+  difference <- dist(diff_matrix, method = "manhattan")
   
   return(difference)
 }
