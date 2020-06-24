@@ -1,51 +1,60 @@
 ### All the self-defined functions I use
 
-## rsphere(n, dim, distribution, r)
+## rsphere()
 # generate random points within a sphere ---------------------------------------
 
 rsphere <- function(
   n,  # number of points to generate
   dim = 2,  # dimension in which to generate sphere
   distribution = "unif", # distribution to use
-  r = 0.5   # radius of the sphere
+  sd = 1, # if distribution not unif whats the sd
+  n_groups = 3, # if groups, how many?
+  sd_group = 0.1*sd/n_groups # sd for each group
 ) 
 {
-  points <- as.data.frame(matrix(NA, nrow = 1, ncol = dim + 1))
-  while(nrow(points) < n + 1) {
-    
-    # use the distribution
-    if(distribution == "unif") { 
+  points_df <- as.data.frame(matrix(NA, nrow = 1, ncol = dim))
+  
+  # use the distribution
+  if(distribution == "unif") { 
+    while(nrow(points_df) < n + 1) {
       point <- runif(dim, min = -0.5, max = 0.5) # point within cube
-      dist <- norm(point, type = "2") # distance to center
-      if(dist <= r) { # only keep points in sphere
-        points <- rbind(points, c(point, dist))
+      dist <- dist(point, rep(0, dim), method = "manhattan") # distance to center
+      if(dist <= 0.5) { # only keep points in sphere
+        points_df <- rbind(points_df, point)
       }
-    } else if(distribution == "normal") {
-      point <- rnorm(dim, mean = 0, sd = 0.5)
-      dist <- norm(point, type = "2") # distance to center
-      if(dist <= r) { # only keep points in sphere
-        points <- rbind(points, c(point, dist))
+    }
+  } else if(distribution == "normal") {
+      points <- rmvnorm(n, mean = rep(0, dim), sigma = sd*diag(dim))
+      dist <- apply(points, MARGIN = 1, dist, rep(0, dim), 
+                    method = "manhattan") # distance to center
+      max_dist <- max(dist)
+      points <- points/(max_dist*2) # scale the points, so the max dist is 1
+      points_df <- rbind(points_df, points)
+  } else if(distribution == "groups") {
+      g_means <- as.data.frame(rmvnorm(n_groups, mean = rep(0, dim),
+                                       sigma = sd*diag(dim))) # get groupmeans
+      while(nrow(points_df) < n + 1) {
+        mean <- unlist(sample_n(g_means, 1)) # which group? 
+        point <- rmvnorm(1, mean = mean, sigma = sd_group*diag(dim))
+        points_df <- rbind(points_df, point)
       }
-    } else if(distribution == "exponential") { 
-      point <- rexp(dim, rate = 4) # always positive -> shift center (falsche Lösung)
-      dist <- dist(rbind( # distance to shifted center
-        point,
-        rep(r, times = dim))) # shifted center
-      if(dist <= r) { # only keep points in sphere
-        points <- rbind(points, c(point, dist))
-      }
-    } else warning("Use a valid distribution")
-  }
-  points <- points[-1,] # delete first row (full of NAs)
-  rownames(points) <- 1:n # rename rows
-  colnames(points) <- c(1:dim, "distance") # rename columns
-  return(points)
+      dist <- apply(points_df, MARGIN = 1, apply(points, MARGIN = 1, dist,
+                                                 rep(0, dim), 
+                                                 method = "manhattan")) 
+      # distance to center
+      max_dist <- max(dist, na.rm = TRUE)
+      points_df <- points_df/(max_dist*2) # scale the points, so the max dist is 1
+  } else warning("Use a valid distribution")
+  points_df <- points_df[-1,] # delete first row (full of NAs)
+  rownames(points_df) <- 1:n # rename rows
+  colnames(points_df) <- c(1:dim) # rename columns
+  return(points_df)
 }
 
 ## -----------------------------------------------------------------------------
 
 
-## gen_network(points, directed)
+## gen_network()
 # generate a network out of the points -----------------------------------------
 
 gen_network <- function(
@@ -56,18 +65,13 @@ gen_network <- function(
   n <- nrow(points) # get number of nodes
   
   # get the distances between all points
-  distance <- as.matrix(dist(subset(points, select = - c(distance))))
+  distance <- as.matrix(dist(points, method = "manhattan"))
   
-  # generate empty sociomatrix
-  sociomatrix <- matrix(NA, nrow = nrow(points), ncol = nrow(points))
+  gen_tie <- function(distance) rbernoulli(1, 1 - distance)
   
-  for(i in 1:n) {
-    for(j in 1:n) {
-      tie_prob <- 1- distance[i,j] # get prob for a tie
-      tie <- rbernoulli(1, tie_prob) # generate a tie
-      sociomatrix[i,j] <- tie # add to the sociomatrix
-    }
-  }
+  sociomatrix <- apply(distance, c(1, 2), gen_tie) # generate the sociomatrix
+  
+  diag(sociomatrix) <- FALSE # diagonal has no ties
   
   # if we want undirected ties, we use only the lower triangle of the 
   # sociomatrix and 'flip' it
@@ -84,9 +88,9 @@ gen_network <- function(
   
   return(list(network = network,
               n = n,
-              probabilities = distance,
+              probabilities = 1 - distance,
               sociomatrix = sociomatrix,
-              dimensions = length(points) - 1
+              dimensions = length(points)
   ))
 }
 
@@ -99,7 +103,7 @@ gen_network <- function(
 
 fit_models <- function(
   net_list, # the network list gen_network returns
-  tofit = "mle"
+  ...
   )
 {
   # retrieve all important information from net_list
@@ -110,10 +114,13 @@ fit_models <- function(
   model_list <- vector(mode = "list", length = dim - 1) # empty list
   
   for(i in 2:dim) {
-    model <- ergmm(network ~ euclidean(d = i), tofit = tofit) # fit model
-    model_list[[i-1]] <- model # add to list
+    start <- Sys.time()
+    model <- ergmm(network ~ euclidean(d = i), ...) # fit model
+    end <- Sys.time()
+    model_list[[i-1]] <- list(model = model, time = end-start)  # add to list
     names(model_list)[i-1] <- paste(i, "dim", "fit", sep = "_") # name
   }
+  
   return(list(
     models = model_list,
     network = net_list
@@ -153,36 +160,78 @@ gen_fit_all <- function(
 
 ## -----------------------------------------------------------------------------
 
-## comp_distances()
-# get the difference between the real and the fitted distances -----------------
+## comp_distance()
+# get the difference between the real and the fitted distance -----------------
 
-comp_distances <- function(
+comp_distance <- function(
   network, # true network
-  models, # models too compare with (a list)
+  model, # model too compare with
   mle = TRUE # fitted using mle?
   )
 {
-  n_models <- length(models)
-  difference_list <- vector(mode = "list", length = n_models) # empty list
-  distance_network <- network$probabilities # true distances
-  for(i in 1:n_models) {
-    if(mle == TRUE) {
-    positions_model <- models[[i]]$mle$Z
-    } else warning("Have you fitted with mle?")
-  distance_model <- as.matrix(dist(positions_model)) # fitted distances
-  distance_model_s <- distance_model/max(distance_model) # scale
+  distance_network <- 1 - network$probabilities # true distances
+  if(mle == TRUE) {
+    positions_model <- model$mle$Z
+  } else warning("Have you fitted with mle?")
+  distance_model <- as.matrix(dist(positions_model, method = "manhattan")) # fitted distances
+  distance_model_s <- max(distance_network)*distance_model/max(distance_model) 
+  # scale
                       
   diff_matrix <- distance_model_s - distance_network
-  difference <- sqrt(
-    sum(
-      diff_matrix*diff_matrix
-      )
-  )
-  difference_list[[i]] <- difference # add to list
-  names(difference_list)[i] <- c(
-    paste(names(models)[i], "difference", sep = "_")) # name
-  }
-  return(difference_list)
+  difference <- dist(diff_matrix, method = "manhattan")
+  
+  return(difference)
 }
+
+## -----------------------------------------------------------------------------
+
+## prod_df()
+# organize the results in a clean way ------------------------------------------
+
+prod_df <- function(
+  simulation, # a list with simulated networks and the fitted models
+  distribution # you have to manually enter the distribution
+) {
+  
+  df <- data.frame(matrix(vector(), 0, 6), stringsAsFactors = FALSE)
+  
+  for(id_nodes in 1:length(simulation)) { # go through all diff nodes
+    nodes <- str_extract(names(simulation[id_nodes]), pattern = "^\\d+")
+    for(id_org_dim in 1:length(simulation[[id_nodes]])) { # all diff org dim
+      org_dim <- str_extract(names(simulation[[id_nodes]][id_org_dim]),
+                             pattern = "(?<=_)\\d+(?=_dim)")
+      for(id_fit_dim in 
+          1:length(simulation[[id_nodes]][[id_org_dim]]$models[])) { # fit dim
+        fit_dim <- str_extract(
+          names(simulation[[id_nodes]][[id_org_dim]]$models[id_fit_dim]),
+                            pattern = "^\\d+(?=_dim)")
+        time <- simulation[[id_nodes]][[id_org_dim]]$models[[id_fit_dim]]$time
+        n <- simulation[[id_nodes]][[id_org_dim]]$network
+        m <- simulation[[id_nodes]][[id_org_dim]]$models[[id_fit_dim]]$model
+        distance_diff <- comp_distance(n, m)
+        
+        # put row together and add to df
+        df <- rbind(df, 
+                    cbind(distribution, nodes, org_dim, 
+                          fit_dim, time, distance_diff))
+      }
+    }
+  }
+  
+  # make right type
+  df <- transform(df, distribution = as.character(distribution),
+                  nodes = as.factor(nodes), 
+                  org_dim = as.factor(org_dim),
+                  fit_dim = as.factor(fit_dim), 
+                  time = as.numeric(time), 
+                  distance_diff = as.numeric(distance_diff))
+  
+  # change nodes levels
+  
+  levels(df$nodes) <- as.character(sort(as.integer(levels(df$nodes))))
+  
+  return(df)
+}
+
 
 ## -----------------------------------------------------------------------------
