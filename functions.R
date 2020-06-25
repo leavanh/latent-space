@@ -18,7 +18,7 @@ rsphere <- function(
   if(distribution == "unif") { 
     while(nrow(points_df) < n + 1) {
       point <- runif(dim, min = -0.5, max = 0.5) # point within cube
-      dist <- dist(point, rep(0, dim), method = "manhattan")[] # distance to center
+      dist <- dist(rbind(point, rep(0, dim)), method = "manhattan") # distance to center
       if(dist <= 0.5) { # only keep points in sphere
         points_df <- rbind(points_df, point)
       }
