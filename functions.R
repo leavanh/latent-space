@@ -178,7 +178,7 @@ comp_distance <- function(
   # scale
                       
   diff_matrix <- distance_model_s - distance_network
-  difference <- dist(diff_matrix, method = "manhattan")
+  difference <- sum(abs(diff_matrix))
   
   return(difference)
 }
@@ -193,27 +193,31 @@ prod_df <- function(
   distribution # you have to manually enter the distribution
 ) {
   
+  rep <- length(simulation) # how often repeated?
+  
   df <- data.frame(matrix(vector(), 0, 6), stringsAsFactors = FALSE)
   
-  for(id_nodes in 1:length(simulation)) { # go through all diff nodes
-    nodes <- str_extract(names(simulation[id_nodes]), pattern = "^\\d+")
-    for(id_org_dim in 1:length(simulation[[id_nodes]])) { # all diff org dim
-      org_dim <- str_extract(names(simulation[[id_nodes]][id_org_dim]),
-                             pattern = "(?<=_)\\d+(?=_dim)")
-      for(id_fit_dim in 
-          1:length(simulation[[id_nodes]][[id_org_dim]]$models[])) { # fit dim
-        fit_dim <- str_extract(
-          names(simulation[[id_nodes]][[id_org_dim]]$models[id_fit_dim]),
-                            pattern = "^\\d+(?=_dim)")
-        time <- simulation[[id_nodes]][[id_org_dim]]$models[[id_fit_dim]]$time
-        n <- simulation[[id_nodes]][[id_org_dim]]$network
-        m <- simulation[[id_nodes]][[id_org_dim]]$models[[id_fit_dim]]$model
-        distance_diff <- comp_distance(n, m)
-        
-        # put row together and add to df
-        df <- rbind(df, 
-                    cbind(distribution, nodes, org_dim, 
-                          fit_dim, time, distance_diff))
+  for(i in 1:rep) {
+    for(id_nodes in 1:length(simulation[[i]])) { # go through all diff nodes
+      nodes <- str_extract(names(simulation[[i]][id_nodes]), pattern = "^\\d+")
+      for(id_org_dim in 1:length(simulation[[i]][[id_nodes]])) { # all diff org dim
+        org_dim <- str_extract(names(simulation[[i]][[id_nodes]][id_org_dim]),
+                               pattern = "(?<=_)\\d+(?=_dim)")
+        for(id_fit_dim in 
+            1:length(simulation[[i]][[id_nodes]][[id_org_dim]]$models[])) { # fit dim
+          fit_dim <- str_extract(
+            names(simulation[[i]][[id_nodes]][[id_org_dim]]$models[id_fit_dim]),
+                              pattern = "^\\d+(?=_dim)")
+          time <- simulation[[i]][[id_nodes]][[id_org_dim]]$models[[id_fit_dim]]$time
+          n <- simulation[[i]][[id_nodes]][[id_org_dim]]$network
+          m <- simulation[[i]][[id_nodes]][[id_org_dim]]$models[[id_fit_dim]]$model
+          distance_diff <- comp_distance(n, m)
+          
+          # put row together and add to df
+          df <- rbind(df, 
+                      cbind(distribution, nodes, org_dim, 
+                            fit_dim, time, distance_diff))
+        }
       }
     }
   }
