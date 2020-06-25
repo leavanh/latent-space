@@ -18,7 +18,7 @@ rsphere <- function(
   if(distribution == "unif") { 
     while(nrow(points_df) < n + 1) {
       point <- runif(dim, min = -0.5, max = 0.5) # point within cube
-      dist <- dist(point, rep(0, dim), method = "manhattan") # distance to center
+      dist <- dist(point, rep(0, dim), method = "manhattan")[] # distance to center
       if(dist <= 0.5) { # only keep points in sphere
         points_df <- rbind(points_df, point)
       }
@@ -67,7 +67,7 @@ gen_network <- function(
   # get the distances between all points
   distance <- as.matrix(dist(points, method = "manhattan"))
   
-  gen_tie <- function(distance) rbernoulli(1, 1 - distance)
+  gen_tie <- function(distance) {rbernoulli(1, 1 - distance)}
   
   sociomatrix <- apply(distance, c(1, 2), gen_tie) # generate the sociomatrix
   

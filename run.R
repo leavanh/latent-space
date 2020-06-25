@@ -5,6 +5,8 @@ library(latentnet)
 library(tidyverse)
 library(mvtnorm)
 library(doRNG)
+library(parallel)
+library(doParallel)
 
 # load functions
 
@@ -12,6 +14,9 @@ source("functions.R")
 
 
 ## generate networks
+
+cl <- makeCluster(38)
+registerDoParallel(cl)
 
 set.seed(09101999)
 
@@ -26,8 +31,10 @@ rep <- 10
 
 start_time <- Sys.time()
 
-simulation_unif <- foreach(i = 1:rep) %dopar% gen_fit_all(
-                          n = c(20, 50, 100), dim = c (2, 4, 6, 8),
+simulation_unif <- foreach(i = 1:rep,
+                           .packages = c("latentnet", "tidyverse",
+                           "mvtnorm")) %dopar% 
+                    gen_fit_all(n = c(20, 50, 100), dim = c (2, 4, 6, 8),
                           distribution = "unif", tofit = "mle")
 
 save(simulation_unif, file = "simulation_unif.RData") # save
@@ -83,6 +90,8 @@ time_diff_normal
 time_diff_groups3
 time_diff_groups4
 time_diff_groups5
+
+stopCluster(cl)
 
 load("simulation_unif.RData") # load
 load("simulation_normal.RData") # load
