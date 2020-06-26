@@ -38,10 +38,8 @@ rsphere <- function(
         point <- rmvnorm(1, mean = mean, sigma = sd_group*diag(dim))
         points_df <- rbind(points_df, point)
       }
-      dist <- apply(points_df, MARGIN = 1, apply(points, MARGIN = 1, dist,
-                                                 rep(0, dim), 
-                                                 method = "manhattan")) 
-      # distance to center
+      dist <- apply(points_df, MARGIN = 1, dist, rep(0, dim), 
+                    method = "manhattan") # distance to center
       max_dist <- max(dist, na.rm = TRUE)
       points_df <- points_df/(max_dist*2) # scale the points, so the max dist is 1
   } else warning("Use a valid distribution")
@@ -227,8 +225,8 @@ prod_df <- function(
                   nodes = as.factor(nodes), 
                   org_dim = as.factor(org_dim),
                   fit_dim = as.factor(fit_dim), 
-                  time = as.numeric(time), 
-                  distance_diff = as.numeric(distance_diff))
+                  time = as.numeric(levels(time))[time], 
+                  distance_diff = as.numeric(levels(distance_diff))[distance_diff])
   
   # change nodes levels
   
