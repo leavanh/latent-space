@@ -22,7 +22,7 @@ ggplot(results_mean_df,
   geom_line() +
   facet_grid(distribution ~ nodes) +
   scale_color_manual(values = time_palette) +
-  ylim(c(0, 60)) +
+  # ylim(c(0, 60)) +
   labs(title = "Results: Time to fit",
        x = "Fitted dimension",
        y = "Time (in seconds)",

@@ -71,20 +71,20 @@ rep <- 10
 # end_time <- Sys.time()
 # time_diff_groups3 <- end_time-start_time
 
-set.seed(09101999)
-
-start_time <- Sys.time()
-
-simulation_groups4 <- foreach(i = 1:rep,
-                              .packages = c("latentnet", "tidyverse",
-                                            "mvtnorm")) %dopar% gen_fit_all(
-                             n = c(20, 50, 100), dim = c (2, 4, 6, 8),
-                                 distribution = "groups", n_groups = 4,
-                                 tofit = "mle")
-save(simulation_groups4, file = "simulation_groups4.RData")
-
-end_time <- Sys.time()
-time_diff_groups4 <- end_time-start_time
+# set.seed(09101999)
+# 
+# start_time <- Sys.time()
+# 
+# simulation_groups4 <- foreach(i = 1:rep,
+#                               .packages = c("latentnet", "tidyverse",
+#                                             "mvtnorm")) %dopar% gen_fit_all(
+#                              n = c(20, 50, 100), dim = c (2, 4, 6, 8),
+#                                  distribution = "groups", n_groups = 4,
+#                                  tofit = "mle")
+# save(simulation_groups4, file = "simulation_groups4.RData")
+# 
+# end_time <- Sys.time()
+# time_diff_groups4 <- end_time-start_time
 
 set.seed(09101999)
 
@@ -118,12 +118,14 @@ load("simulation_groups5.RData") # load
 unif_df <- prod_df(simulation_unif, "unif")
 normal_df <- prod_df(simulation_normal, "normal")
 groups3_df <- prod_df(simulation_groups3, "3 groups")
+groups4_df <- prod_df(simulation_groups4, "4 groups")
 
 
-results_df <- bind_rows(unif_df, normal_df, groups3_df)
+results_df <- bind_rows(unif_df, normal_df, groups3_df, groups4_df)
 
 results_df$distribution <- factor(results_df$distribution, 
-                                  levels = c("unif", "normal", "3 groups"))
+                                  levels = c("unif", "normal", "3 groups",
+                                             "4 groups"))
 results_mean_df <- results_df %>%
   group_by(distribution, nodes, org_dim, fit_dim) %>%
   summarise(mean_time = mean(time),
