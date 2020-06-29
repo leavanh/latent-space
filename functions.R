@@ -33,10 +33,13 @@ rsphere <- function(
   } else if(distribution == "groups") {
       g_means <- as.data.frame(rmvnorm(n_groups, mean = rep(0, dim),
                                        sigma = sd*diag(dim))) # get groupmeans
-      while(nrow(points_df) < n + 1) {
-        mean <- unlist(sample_n(g_means, 1)) # which group? 
-        point <- rmvnorm(1, mean = mean, sigma = sd_group*diag(dim))
-        points_df <- rbind(points_df, point)
+      g_sizes <- as.vector(rmultinom(1, n, # get groupsizes
+                                     prob = rep(n/(n_groups*100), times = n_groups))) 
+      for(i in 1:n_groups) {
+        mean <- unlist(g_means[i,]) # which mean?
+        size <- g_sizes[i] # which size?
+        points <- rmvnorm(size, mean = mean, sigma = sd_group*diag(dim))
+        points_df <- rbind(points_df, points)
       }
       dist <- apply(points_df, MARGIN = 1, dist, rep(0, dim), 
                     method = "manhattan") # distance to center
