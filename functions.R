@@ -18,7 +18,7 @@ rsphere <- function(
   if(distribution == "unif") { 
     while(nrow(points_df) < n + 1) {
       point <- runif(dim, min = -0.5, max = 0.5) # point within cube
-      dist <- dist(rbind(point, rep(0, dim)), method = "manhattan") # distance to center
+      dist <- dist(rbind(point, rep(0, dim)), method = "euclidean") # distance to center
       if(dist <= 0.5) { # only keep points in sphere
         points_df <- rbind(points_df, point)
       }
@@ -26,7 +26,7 @@ rsphere <- function(
   } else if(distribution == "normal") {
       points <- rmvnorm(n, mean = rep(0, dim), sigma = sd*diag(dim))
       dist <- apply(points, MARGIN = 1, dist, rep(0, dim), 
-                    method = "manhattan") # distance to center
+                    method = "euclidean") # distance to center
       max_dist <- max(dist)
       points <- points/(max_dist*2) # scale the points, so the max dist is 1
       points_df <- rbind(points_df, points)
@@ -42,7 +42,7 @@ rsphere <- function(
         points_df <- rbind(points_df, points)
       }
       dist <- apply(points_df, MARGIN = 1, dist, rep(0, dim), 
-                    method = "manhattan") # distance to center
+                    method = "euclidean") # distance to center
       max_dist <- max(dist, na.rm = TRUE)
       points_df <- points_df/(max_dist*2) # scale the points, so the max dist is 1
   } else warning("Use a valid distribution")
@@ -66,7 +66,7 @@ gen_network <- function(
   n <- nrow(points) # get number of nodes
   
   # get the distances between all points
-  distance <- as.matrix(dist(points, method = "manhattan"))
+  distance <- as.matrix(dist(points, method = "euclidean"))
   
   gen_tie <- function(distance) {rbernoulli(1, 1 - distance)}
   
@@ -136,7 +136,6 @@ fit_models <- function(
 gen_fit_all <- function(
   n, # vector of number of nodes
   dim, # vector of dimensions
-  tofit = "mle", # use mle
   ...
 ) 
 {
@@ -148,7 +147,7 @@ gen_fit_all <- function(
     for(j in 1:length(dim)) {
       points <- rsphere(n = n[i], dim = dim[j], ...)
       network <- gen_network(points)
-      models <- fit_models(network, tofit = tofit)
+      models <- fit_models(network)
       help_model_list[[j]] <- models # add to list
       names(help_model_list)[j] <- c(paste(n[i], "nodes", dim[j], "dim",
                                            sep = "_")) # name
@@ -179,7 +178,7 @@ comp_distance <- function(
   # scale
                       
   diff_matrix <- distance_model_s - distance_network
-  difference <- sum(abs(diff_matrix))
+  difference <- sqrt(sum(diff_matrix*diff_matrix))
   
   return(difference)
 }
