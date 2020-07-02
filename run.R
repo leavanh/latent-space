@@ -90,16 +90,16 @@ set.seed(09101999)
 
 start_time <- Sys.time()
 
-simulation_groups5 <- foreach(i = 1:rep,
+simulation_groups8 <- foreach(i = 1:rep,
                               .packages = c("latentnet", "tidyverse",
                                             "mvtnorm")) %dopar% gen_fit_all(
                              n = c(20, 50, 100), dim = c (2, 4, 6, 8),
-                                 distribution = "groups", n_groups = 5,
+                                 distribution = "groups", n_groups = 8,
                                  tofit = "mle")
-save(simulation_groups5, file = "simulation_groups5.RData")
+save(simulation_groups8, file = "simulation_groups8.RData")
 
 end_time <- Sys.time()
-time_diff_groups5 <- end_time-start_time
+time_diff_groups8 <- end_time-start_time
 
 time_diff_unif
 time_diff_normal
