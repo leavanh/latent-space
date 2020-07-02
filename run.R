@@ -35,7 +35,7 @@ simulation_unif <- foreach(i = 1:rep,
                            .packages = c("latentnet", "tidyverse",
                            "mvtnorm")) %dopar%
                     gen_fit_all(n = c(20, 50, 100), dim = c (2, 4, 6, 8),
-                          distribution = "unif", tofit = "mle")
+                          distribution = "unif")
 
 save(simulation_unif, file = "simulation_unif.RData") # save
 
@@ -50,7 +50,7 @@ simulation_normal <- foreach(i = 1:rep,
                              .packages = c("latentnet", "tidyverse",
                                            "mvtnorm")) %dopar% gen_fit_all(
                             n = c(20, 50, 100), dim = c (2, 4, 6, 8),
-                            distribution = "normal", tofit = "mle")
+                            distribution = "normal")
 save(simulation_normal, file = "simulation_normal.RData")
 
 end_time <- Sys.time()
@@ -64,8 +64,7 @@ simulation_groups3 <- foreach(i = 1:rep,
                               .packages = c("latentnet", "tidyverse",
                                             "mvtnorm")) %dopar%
                         gen_fit_all(n = c(20, 50, 100), dim = c (2, 4, 6, 8),
-                             distribution = "groups", n_groups = 3,
-                             tofit = "mle")
+                             distribution = "groups", n_groups = 3)
 save(simulation_groups3, file = "simulation_groups3.RData")
 
 end_time <- Sys.time()
@@ -79,8 +78,7 @@ simulation_groups4 <- foreach(i = 1:rep,
                               .packages = c("latentnet", "tidyverse",
                                             "mvtnorm")) %dopar% gen_fit_all(
                              n = c(20, 50, 100), dim = c (2, 4, 6, 8),
-                                 distribution = "groups", n_groups = 4,
-                                 tofit = "mle")
+                                 distribution = "groups", n_groups = 4)
 save(simulation_groups4, file = "simulation_groups4.RData")
 
 end_time <- Sys.time()
@@ -94,8 +92,7 @@ simulation_groups5 <- foreach(i = 1:rep,
                               .packages = c("latentnet", "tidyverse",
                                             "mvtnorm")) %dopar% gen_fit_all(
                              n = c(20, 50, 100), dim = c (2, 4, 6, 8),
-                                 distribution = "groups", n_groups = 5,
-                                 tofit = "mle")
+                                 distribution = "groups", n_groups = 5)
 save(simulation_groups5, file = "simulation_groups5.RData")
 
 end_time <- Sys.time()
