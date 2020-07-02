@@ -103,8 +103,7 @@ gen_network <- function(
 # problem with burning in to be fixed
 
 fit_models <- function(
-  net_list, # the network list gen_network returns
-  tofit = c("mle")
+  net_list # the network list gen_network returns
   )
 {
   # retrieve all important information from net_list
@@ -116,7 +115,7 @@ fit_models <- function(
   
   for(i in 2:dim) {
     start <- Sys.time()
-    model <- ergmm(network ~ euclidean(d = i), tofit) # fit model
+    model <- ergmm(network ~ euclidean(d = i)) # fit model
     end <- Sys.time()
     model_list[[i-1]] <- list(model = model, time = end-start)  # add to list
     names(model_list)[i-1] <- paste(i, "dim", "fit", sep = "_") # name
@@ -165,15 +164,12 @@ gen_fit_all <- function(
 
 comp_distance <- function(
   network, # true network
-  model, # model too compare with
-  mle = TRUE # fitted using mle?
+  model # model too compare with
   )
 {
   distance_network <- 1 - network$probabilities # true distances
-  if(mle == TRUE) {
-    positions_model <- model$mle$Z
-  } else warning("Have you fitted with mle?")
-  distance_model <- as.matrix(dist(positions_model, method = "manhattan")) # fitted distances
+  positions_model <- model$mle$Z
+  distance_model <- as.matrix(dist(positions_model, method = "euclidean")) # fitted distances
   distance_model_s <- max(distance_network)*distance_model/max(distance_model) 
   # scale
                       
