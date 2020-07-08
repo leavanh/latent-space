@@ -37,6 +37,17 @@ ggplot(results_mean_df,
   # ylim(c(0, 60)) +
   labs(title = "Results: Time to fit",
        x = "Fitted dimension",
-       y = "Time (in seconds)",
+       y = "Mean time (in seconds)",
        color = "Original \ndimension")
 
+ggplot(results_mean_df,
+       aes(fit_dim, sd_time, color = org_dim, group = org_dim)) +
+  geom_point() +
+  geom_line() +
+  facet_grid(distribution ~ nodes) +
+  scale_color_manual(values = time_palette) +
+  # ylim(c(0, 60)) +
+  labs(title = "Variance of Time to fit",
+       x = "Fitted dimension",
+       y = "Standard deviation",
+       color = "Original \ndimension")
