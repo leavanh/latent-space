@@ -127,5 +127,7 @@ results_df$distribution <- factor(results_df$distribution,
 results_mean_df <- results_df %>%
   group_by(distribution, nodes, org_dim, fit_dim) %>%
   summarise(mean_time = mean(time),
-            mean_distance_diff = mean(distance_diff)) %>%
+            mean_distance_diff = mean(distance_diff),
+            sd_time = sd(time),
+            sd_distance_diff = sd(distance_diff)) %>%
   ungroup()

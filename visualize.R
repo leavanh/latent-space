@@ -13,7 +13,19 @@ ggplot(results_mean_df,
   #ylim(c(0, 30)) +
   labs(title = "Results: Difference of distances",
        x = "Fitted dimension",
-       y = "Difference of distances",
+       y = "Mean difference of distances",
+       color = "Original \ndimension")
+
+ggplot(results_mean_df,
+       aes(fit_dim, sd_distance_diff, color = org_dim, group = org_dim)) +
+  geom_point() +
+  geom_line() +
+  facet_grid(distribution ~ nodes) +
+  scale_color_manual(values = diff_palette) +
+  #ylim(c(0, 30)) +
+  labs(title = "Variance of the difference of distances",
+       x = "Fitted dimension",
+       y = "Standard deviation",
        color = "Original \ndimension")
 
 ggplot(results_mean_df,
