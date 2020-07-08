@@ -60,6 +60,20 @@ set.seed(09101999)
 
 start_time <- Sys.time()
 
+simulation_groups2 <- foreach(i = 1:rep,
+                              .packages = c("latentnet", "tidyverse",
+                                            "mvtnorm")) %dopar% gen_fit_all(
+                                              n = c(20, 50, 100), dim = c (2, 4, 6, 8),
+                                              distribution = "groups", n_groups = 2)
+save(simulation_groups2, file = "simulation_groups2.RData")
+
+end_time <- Sys.time()
+time_diff_groups2 <- end_time-start_time
+
+set.seed(09101999)
+
+start_time <- Sys.time()
+
 simulation_groups3 <- foreach(i = 1:rep,
                               .packages = c("latentnet", "tidyverse",
                                             "mvtnorm")) %dopar%
@@ -84,46 +98,32 @@ save(simulation_groups4, file = "simulation_groups4.RData")
 end_time <- Sys.time()
 time_diff_groups4 <- end_time-start_time
 
-set.seed(09101999)
-
-start_time <- Sys.time()
-
-simulation_groups5 <- foreach(i = 1:rep,
-                              .packages = c("latentnet", "tidyverse",
-                                            "mvtnorm")) %dopar% gen_fit_all(
-                             n = c(20, 50, 100), dim = c (2, 4, 6, 8),
-                                 distribution = "groups", n_groups = 5)
-save(simulation_groups5, file = "simulation_groups5.RData")
-
-end_time <- Sys.time()
-time_diff_groups5 <- end_time-start_time
-
 time_diff_unif
 time_diff_normal
+time_diff_groups2
 time_diff_groups3
 time_diff_groups4
-time_diff_groups5
 
 stopCluster(cl)
 
 load("simulation_unif.RData") # load
 load("simulation_normal.RData") # load
+load("simulation_groups2.RData") # load
 load("simulation_groups3.RData") # load
 load("simulation_groups4.RData") # load
-load("simulation_groups5.RData") # load
 
 unif_df <- prod_df(simulation_unif, "unif")
 normal_df <- prod_df(simulation_normal, "normal")
+groups2_df <- prod_df(simulation_groups2, "2 groups")
 groups3_df <- prod_df(simulation_groups3, "3 groups")
 groups4_df <- prod_df(simulation_groups4, "4 groups")
-groups5_df <- prod_df(simulation_groups5, "5 groups")
 
 
-results_df <- bind_rows(unif_df, normal_df, groups3_df, groups4_df, groups5_df)
+results_df <- bind_rows(unif_df, normal_df, groups2_df, groups3_df, groups4_df)
 
 results_df$distribution <- factor(results_df$distribution, 
-                                  levels = c("unif", "normal", "3 groups",
-                                             "4 groups", "5 groups"))
+                                  levels = c("unif", "normal", "2 groups", "3 groups",
+                                             "4 groups"))
 results_mean_df <- results_df %>%
   group_by(distribution, nodes, org_dim, fit_dim) %>%
   summarise(mean_time = mean(time),
