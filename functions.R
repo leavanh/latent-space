@@ -165,15 +165,24 @@ gen_fit_all <- function(
 comp_distance <- function(
   network, # true network
   model, # model too compare with
-  metric = "euclidean" # which distance metric to use
+  metric = "euclidean", # which distance metric to use
+  standardize = FALSE # scale or standardize?
   )
 {
   distance_network <- 1 - network$probabilities # true distances
   positions_model <- model$mle$Z
-  distance_model <- as.matrix(dist(positions_model, method = metric)) # fitted distances
-  distance_model_s <- max(distance_network)*distance_model/max(distance_model) 
-  # scale
-  diff_matrix <- distance_model_s - distance_network
+  distance_model <- as.matrix(dist(positions_model, method = metric)) 
+  # fitted distances
+  if(standardize == FALSE) {# scale
+    distance_model_scale <- max(distance_network)*distance_model/max(distance_model)
+    diff_matrix <- distance_model_scale - distance_network
+  } else if(standardize == TRUE) {# standardize
+    distance_model_stand <- (distance_model  -mean(distance_model))/
+      sd(distance_model)
+    distance_network_stand <- (distance_network - mean(distance_network))/
+      sd(distance_network)
+    diff_matrix <- distance_model_stand - distance_network_stand
+  }
   if(metric == "euclidean") {                     
     difference <- sqrt(sum(diff_matrix*diff_matrix))
   } else if(metric == "manhattan") {
