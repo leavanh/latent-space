@@ -164,18 +164,21 @@ gen_fit_all <- function(
 
 comp_distance <- function(
   network, # true network
-  model # model too compare with
+  model, # model too compare with
+  metric = "euclidean" # which distance metric to use
   )
 {
   distance_network <- 1 - network$probabilities # true distances
   positions_model <- model$mle$Z
-  distance_model <- as.matrix(dist(positions_model, method = "euclidean")) # fitted distances
+  distance_model <- as.matrix(dist(positions_model, method = metric)) # fitted distances
   distance_model_s <- max(distance_network)*distance_model/max(distance_model) 
   # scale
-                      
   diff_matrix <- distance_model_s - distance_network
-  difference <- sqrt(sum(diff_matrix*diff_matrix))
-  
+  if(metric == "euclidean") {                     
+    difference <- sqrt(sum(diff_matrix*diff_matrix))
+  } else if(metric == "manhattan") {
+    difference <- sum(abs(diff_matrix))  
+  } else warning("Choose different metric")
   return(difference)
 }
 
@@ -186,7 +189,8 @@ comp_distance <- function(
 
 prod_df <- function(
   simulation, # a list with simulated networks and the fitted models
-  distribution # you have to manually enter the distribution
+  distribution, # you have to manually enter the distribution
+  ...
 ) {
   
   rep <- length(simulation) # how often repeated?
@@ -207,7 +211,7 @@ prod_df <- function(
           time <- simulation[[i]][[id_nodes]][[id_org_dim]]$models[[id_fit_dim]]$time
           n <- simulation[[i]][[id_nodes]][[id_org_dim]]$network
           m <- simulation[[i]][[id_nodes]][[id_org_dim]]$models[[id_fit_dim]]$model
-          distance_diff <- comp_distance(n, m)
+          distance_diff <- comp_distance(n, m, ...)
           
           # put row together and add to df
           df <- rbind(df, 
