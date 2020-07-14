@@ -100,8 +100,6 @@ gen_network <- function(
 ## fit models()
 # fit latent models with same and less dim -------------------------------------
 
-# problem with burning in to be fixed
-
 fit_models <- function(
   net_list # the network list gen_network returns
   )
@@ -197,7 +195,7 @@ comp_distance <- function(
 # organize the results in a clean way ------------------------------------------
 
 prod_df <- function(
-  simulation, # a list with simulated networks and the fitted models
+  simulation, # a list with true networks and the fitted models
   distribution, # you have to manually enter the distribution
   ...
 ) {
@@ -214,18 +212,22 @@ prod_df <- function(
                                pattern = "(?<=_)\\d+(?=_dim)")
         for(id_fit_dim in 
             1:length(simulation[[i]][[id_nodes]][[id_org_dim]]$models[])) { # fit dim
+          a <- simulation[[i]][[id_nodes]][[id_org_dim]]$models[[id_fit_dim]]
           fit_dim <- str_extract(
             names(simulation[[i]][[id_nodes]][[id_org_dim]]$models[id_fit_dim]),
                               pattern = "^\\d+(?=_dim)")
-          time <- simulation[[i]][[id_nodes]][[id_org_dim]]$models[[id_fit_dim]]$time
+          time <- a$time
           n <- simulation[[i]][[id_nodes]][[id_org_dim]]$network
-          m <- simulation[[i]][[id_nodes]][[id_org_dim]]$models[[id_fit_dim]]$model
+          m <- a$model
+          t <- n$network
+          s <- a$sim_network
           distance_diff <- comp_distance(n, m, ...)
+          network_diff <- comp_networks(t, s)
           
           # put row together and add to df
           df <- rbind(df, 
                       cbind(distribution, nodes, org_dim, 
-                            fit_dim, time, distance_diff))
+                            fit_dim, time, distance_diff, network_diff))
         }
       }
     }
@@ -237,7 +239,8 @@ prod_df <- function(
                   org_dim = as.factor(org_dim),
                   fit_dim = as.factor(fit_dim), 
                   time = as.numeric(levels(time))[time], 
-                  distance_diff = as.numeric(levels(distance_diff))[distance_diff])
+                  distance_diff = as.numeric(levels(distance_diff))[distance_diff],
+                  network_diff = as.numeric(levels(network_diff))[network_diff])
   
   # change nodes levels
   
@@ -248,3 +251,53 @@ prod_df <- function(
 
 
 ## -----------------------------------------------------------------------------
+
+## sim_network()
+# simulate network from the fitted models --------------------------------
+
+sim_network <- function(
+  simulation # a list with true networks and the fitted models
+) {
+  
+  rep <- length(simulation) # how often repeated?
+  for(i in 1:rep) {
+    for(id_nodes in 1:length(simulation[[i]])) { # go through all diff nodes
+      for(id_org_dim in 1:length(simulation[[i]][[id_nodes]])) { # all diff org dim
+        for(id_fit_dim in 
+            1:length(simulation[[i]][[id_nodes]][[id_org_dim]]$models[])) { # fit dim
+          m <- simulation[[i]][[id_nodes]][[id_org_dim]]$models[[id_fit_dim]]$model
+          sim_network <- simulate(m$model, seed = 09101999, par = m$mle)
+          
+          # add to the list
+          sim_network -> simulation[[i]][[id_nodes]][[id_org_dim]]$models[[id_fit_dim]][["sim_network"]]
+        }
+      }
+    }
+  }
+  
+  return(simulation)
+}
+
+## -----------------------------------------------------------------------------
+
+## comp_networks()
+# compare the true network to the simulated network ----------------------------
+comp_networks <- function(
+  true_network, # the true underlying network
+  sim_network # the simulated network
+) {
+  
+  # get the sociomatrices
+  t <- as.sociomatrix(true_network)
+  s <- as.sociomatrix(sim_network)
+  
+  # compare the matrices
+  d <- t == s # where are the differences?
+  perc <- sum(d)/length(d)
+  
+  return(perc)
+}
+
+## -----------------------------------------------------------------------------
+
+

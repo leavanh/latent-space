@@ -13,7 +13,7 @@ library(doParallel)
 source("functions.R")
 
 
-## generate networks
+#### Generate networks ####
 
 # parallelise
 
@@ -108,11 +108,23 @@ source("functions.R")
 # 
 # stopCluster(cl)
 
+#### Compare the results ####
+
 load("simulation_unif.RData") # load
 load("simulation_normal.RData") # load
 load("simulation_groups2.RData") # load
 load("simulation_groups3.RData") # load
 load("simulation_groups4.RData") # load
+
+## simulate a network for each fitted model
+
+simulation_unif_new <- sim_network(simulation_unif)
+simulation_normal_new <- sim_network(simulation_normal)
+simulation_groups2_new <- sim_network(simulation_groups2)
+simulation_groups3_new <- sim_network(simulation_groups3)
+simulation_groups4_new <- sim_network(simulation_groups4)
+
+## compare and make a df
 
 unif_df <- prod_df(simulation_unif, "unif", standardize = TRUE)
 normal_df <- prod_df(simulation_normal, "normal", standardize = TRUE)
@@ -133,3 +145,5 @@ results_mean_df <- results_df %>%
             sd_time = sd(time),
             sd_distance_diff = sd(distance_diff)) %>%
   ungroup()
+
+
