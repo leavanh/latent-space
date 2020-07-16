@@ -293,7 +293,7 @@ comp_networks <- function(
   
   # compare the matrices
   d <- t == s # where are the differences?
-  perc <- sum(d)/length(d)
+  perc <- sum(d)/length(d) # higher -> better
   
   return(perc)
 }
