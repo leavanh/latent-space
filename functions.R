@@ -197,6 +197,7 @@ comp_distance <- function(
 prod_df <- function(
   simulation, # a list with true networks and the fitted models
   distribution, # you have to manually enter the distribution
+  method = "euclidean", # comp networks with which method?
   ...
 ) {
   
@@ -222,7 +223,7 @@ prod_df <- function(
           t <- n$network
           s <- a$sim_network
           distance_diff <- comp_distance(n, m, ...)
-          network_diff <- comp_networks(t, s)
+          network_diff <- comp_networks(t, s, method)
           
           # put row together and add to df
           df <- rbind(df, 
@@ -284,18 +285,28 @@ sim_network <- function(
 # compare the true network to the simulated network ----------------------------
 comp_networks <- function(
   true_network, # the true underlying network
-  sim_network # the simulated network
+  sim_network, # the simulated network
+  method = "euclidean" # with metric for comparing?
 ) {
   
   # get the sociomatrices
   t <- as.sociomatrix(true_network)
   s <- as.sociomatrix(sim_network)
   
-  # compare the matrices
-  d <- t == s # where are the differences?
-  perc <- sum(d)/length(d) # higher -> better
+  if(method == "euclidean") {
+    
+    metric <- sqrt(sum((s-t)*(s-t)))
+    
+  } else if(method == "percentage") {
   
-  return(perc)
+    # compare the matrices
+    d <- t == s # where are the differences?
+    metric <- sum(d)/length(d) # higher -> better
+  
+  
+  }
+  
+  return(metric)
 }
 
 ## -----------------------------------------------------------------------------

@@ -120,20 +120,25 @@ load("simulation_groups3.RData") # load
 load("simulation_groups4.RData") # load
 
 ## simulate a network for each fitted model
-
-simulation_unif_new <- sim_network(simulation_unif)
-simulation_normal_new <- sim_network(simulation_normal)
-simulation_groups2_new <- sim_network(simulation_groups2)
-simulation_groups3_new <- sim_network(simulation_groups3)
-simulation_groups4_new <- sim_network(simulation_groups4)
+list(simulation_unif,
+     simulation_normal,
+     simulation_groups2,
+     simulation_groups3,
+     simulation_groups4) %>%
+  mclapply(sim_network) -> simulation_list
 
 ## compare and make a df
 
-unif_df <- prod_df(simulation_unif_new, "unif", standardize = TRUE)
-normal_df <- prod_df(simulation_normal_new, "normal", standardize = TRUE)
-groups2_df <- prod_df(simulation_groups2_new, "2 groups", standardize = TRUE)
-groups3_df <- prod_df(simulation_groups3_new, "3 groups", standardize = TRUE)
-groups4_df <- prod_df(simulation_groups4_new, "4 groups", standardize = TRUE)
+unif_df <- prod_df(simulation_unif_new, "unif", standardize = TRUE,
+                   method = "euclidean")
+normal_df <- prod_df(simulation_normal_new, "normal", standardize = TRUE,
+                     method = "euclidean")
+groups2_df <- prod_df(simulation_groups2_new, "2 groups", standardize = TRUE,
+                      method = "euclidean")
+groups3_df <- prod_df(simulation_groups3_new, "3 groups", standardize = TRUE,
+                      method = "euclidean")
+groups4_df <- prod_df(simulation_groups4_new, "4 groups", standardize = TRUE,
+                      method = "euclidean")
 
 
 results_df <- bind_rows(unif_df, normal_df, groups2_df, groups3_df, groups4_df)
