@@ -120,6 +120,7 @@ load("simulation_groups3.RData") # load
 load("simulation_groups4.RData") # load
 
 ## simulate a network for each fitted model
+
 list(simulation_unif,
      simulation_normal,
      simulation_groups2,
@@ -129,23 +130,28 @@ list(simulation_unif,
 
 ## compare and make a df
 
-unif_df <- prod_df(simulation_unif_new, "unif", standardize = TRUE,
-                   method = "euclidean")
-normal_df <- prod_df(simulation_normal_new, "normal", standardize = TRUE,
-                     method = "euclidean")
-groups2_df <- prod_df(simulation_groups2_new, "2 groups", standardize = TRUE,
-                      method = "euclidean")
-groups3_df <- prod_df(simulation_groups3_new, "3 groups", standardize = TRUE,
-                      method = "euclidean")
-groups4_df <- prod_df(simulation_groups4_new, "4 groups", standardize = TRUE,
-                      method = "euclidean")
+simulation_list %>%
+  lapply(prod_df, "change", standardize = TRUE,
+          method = "euclidean") -> results_list # list with all results
 
+# change to the right distribution
 
-results_df <- bind_rows(unif_df, normal_df, groups2_df, groups3_df, groups4_df)
+results_list[[1]]$distribution <- "unif"
+results_list[[2]]$distribution <- "normal"
+results_list[[3]]$distribution <- "2 groups"
+results_list[[4]]$distribution <- "3 groups"
+results_list[[5]]$distribution <- "4 groups"
+
+results_df <- bind_rows(results_list) # as one df
+
+# distribution as factor
 
 results_df$distribution <- factor(results_df$distribution, 
                                   levels = c("unif", "normal", "2 groups", 
                                              "3 groups", "4 groups"))
+
+# get mean results
+
 results_mean_df <- results_df %>%
   group_by(distribution, nodes, org_dim, fit_dim) %>%
   summarise(mean_time = mean(time),
