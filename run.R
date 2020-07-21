@@ -2,6 +2,7 @@
 # load packages
 
 library(latentnet)
+library(purrr)
 library(tidyverse)
 library(mvtnorm)
 library(doRNG)
@@ -25,9 +26,9 @@ registerDoParallel(cl)
 # 2,4,6,8 dimensions
 # unif, normal distribution and groups of 2,3,4
 # use mle
-# repeat 10 times each
+# repeat 5 times each
 
-rep <- 10
+rep <- 5
 
 set.seed(09101999)
 

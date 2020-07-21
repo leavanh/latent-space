@@ -101,13 +101,13 @@ gen_network <- function(
 # fit latent models with same and less dim -------------------------------------
 
 fit_models <- function(
-  net_list # the network list gen_network returns
+  net_list, # the network list gen_network returns
+  dim # dimension up to which to fit
   )
 {
   # retrieve all important information from net_list
   network <- net_list$network
   n <- net_list$n
-  dim <- net_list$dimensions
   
   model_list <- vector(mode = "list", length = dim - 1) # empty list
   
@@ -136,6 +136,9 @@ gen_fit_all <- function(
   ...
 ) 
 {
+  # get the highest dim out of dim-vector
+  dim_highest <- max(dim)
+  
   # empty list models
   end_model_list <- vector(mode = "list", length = length(n)) 
   help_model_list <-  vector(mode = "list", length = length(dim)) 
@@ -144,7 +147,7 @@ gen_fit_all <- function(
     for(j in 1:length(dim)) {
       points <- rsphere(n = n[i], dim = dim[j], ...)
       network <- gen_network(points)
-      models <- fit_models(network)
+      models <- fit_models(network, dim_highest)
       help_model_list[[j]] <- models # add to list
       names(help_model_list)[j] <- c(paste(n[i], "nodes", dim[j], "dim",
                                            sep = "_")) # name
