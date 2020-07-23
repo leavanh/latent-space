@@ -200,7 +200,6 @@ comp_distance <- function(
 prod_df <- function(
   simulation, # a list with true networks and the fitted models
   distribution, # you have to manually enter the distribution
-  method = "euclidean", # comp networks with which method?
   ...
 ) {
   
@@ -226,12 +225,14 @@ prod_df <- function(
           t <- n$network
           s <- a$sim_network
           distance_diff <- comp_distance(n, m, ...)
-          network_diff <- comp_networks(t, s, method)
+          network_diff_eucl <- comp_networks(t, s, "euclidean")
+          network_diff_perc <- comp_networks(t, s, "percentage")
           
           # put row together and add to df
           df <- rbind(df, 
                       cbind(distribution, nodes, org_dim, 
-                            fit_dim, time, distance_diff, network_diff))
+                            fit_dim, time, distance_diff, network_diff_eucl,
+                            network_diff_perc))
         }
       }
     }
@@ -244,7 +245,10 @@ prod_df <- function(
                   fit_dim = as.factor(fit_dim), 
                   time = as.numeric(levels(time))[time], 
                   distance_diff = as.numeric(levels(distance_diff))[distance_diff],
-                  network_diff = as.numeric(levels(network_diff))[network_diff])
+                  network_diff_eucl = as.numeric(levels(
+                    network_diff_eucl))[network_diff_eucl]),
+                  network_diff_perc = as.numeric(levels(
+                    network_diff_perc))[network_diff_perc])
   
   # change nodes levels
   

@@ -18,7 +18,7 @@ source("functions.R")
 
 # parallelise
 
-cl <- makeCluster(38)
+cl <- makeCluster(18)
 registerDoParallel(cl)
 
 # make the networks
@@ -132,8 +132,7 @@ list(simulation_unif,
 ## compare and make a df
 
 simulation_list %>%
-  lapply(prod_df, "change", standardize = TRUE,
-          method = "euclidean") -> results_list # list with all results
+  lapply(prod_df, "change", standardize = TRUE) -> results_list # list with all results
 
 # change to the right distribution
 
