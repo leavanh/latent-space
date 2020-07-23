@@ -156,9 +156,11 @@ results_mean_df <- results_df %>%
   group_by(distribution, nodes, org_dim, fit_dim) %>%
   summarise(mean_time = mean(time),
             mean_distance_diff = mean(distance_diff),
-            mean_network_diff = mean(network_diff),
+            mean_network_diff_eucl = mean(network_diff_eucl),
+            mean_network_diff_perc = mean(network_diff_perc),
             sd_time = sd(time),
             sd_distance_diff = sd(distance_diff),
-            sd_network_diff = sd(network_diff)) %>%
+            sd_network_diff_eucl = sd(network_diff_eucl),
+            sd_network_diff_perc = sd(network_diff_perc)) %>%
   ungroup()
 

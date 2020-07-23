@@ -4,62 +4,103 @@ theme_set(theme_bw()) # set theme
 dist_palette <- c("#FEE090", "#FDAE61", "#F46D43", "#D73027")
 net_palette <- c("#ABD9E9", "#74ADD1", "#4575B4", "#313695")
 
+#### Distance of differences ####
+# ------------------------------------------------------------------------------
+
 # mean distance of differences
 
-ggplot(results_mean_df,
+did_mean <- ggplot(results_mean_df,
        aes(fit_dim, mean_distance_diff, color = org_dim, group = org_dim)) +
   geom_point() +
   geom_line() +
-  facet_grid(distribution ~ nodes) +
   scale_color_manual(values = dist_palette) +
-  #ylim(c(0, 30)) +
   labs(title = "Results: Difference of distances",
+       subtitle = "Euclidean distance between the true distances between 
+       the nodes and the fitted distances",
        x = "Fitted dimension",
        y = "Mean difference of distances",
        color = "Original \ndimension")
+
+did_mean  + facet_grid(nodes ~ distribution)
+
 ggsave(file = "Did_mean.pdf", width = 210, height = 297, units = "mm")
+
+did_mean + facet_grid(nodes ~ distribution, scales = "free_y")
+
+ggsave(file = "Did_mean_free.pdf", width = 210, height = 297, units = "mm")
+
 
 # sd difference of distances
 
-ggplot(results_mean_df,
+did_sd <- ggplot(results_mean_df,
        aes(fit_dim, sd_distance_diff, color = org_dim, group = org_dim)) +
   geom_point() +
   geom_line() +
-  facet_grid(distribution ~ nodes) +
   scale_color_manual(values = dist_palette) +
-  #ylim(c(0, 30)) +
   labs(title = "Variance of the difference of distances",
+       subtitle = "Euclidean distance between the true distances between 
+       the nodes and the fitted distances",
        x = "Fitted dimension",
        y = "Standard deviation",
        color = "Original \ndimension")
+
+did_sd + facet_grid(nodes ~ distribution)
+
 ggsave(file = "Did_sd.pdf", width = 210, height = 297, units = "mm")
 
-# mean difference of networks
+did_sd + facet_grid(nodes ~ distribution, scale = "free_y")
 
-ggplot(results_mean_df,
-       aes(fit_dim, mean_network_diff, color = org_dim, group = org_dim)) +
+ggsave(file = "Did_sd_free.pdf", width = 210, height = 297, units = "mm")
+
+# ------------------------------------------------------------------------------
+
+
+#### Distance of networks ####
+# ------------------------------------------------------------------------------
+
+# mean distance of differences
+
+did_mean <- ggplot(results_mean_df,
+                   aes(fit_dim, mean_distance_diff, color = org_dim, group = org_dim)) +
   geom_point() +
   geom_line() +
-  facet_grid(distribution ~ nodes) +
-  scale_color_manual(values = net_palette) +
-  # ylim(c(0, 60)) +
-  labs(title = "Results: Difference of networks",
+  scale_color_manual(values = dist_palette) +
+  labs(title = "Results: Difference of distances",
+       subtitle = "Euclidean distance between the true distances between 
+       the nodes and the fitted distances",
        x = "Fitted dimension",
-       y = "Mean difference",
+       y = "Mean difference of distances",
        color = "Original \ndimension")
-ggsave(file = "Din_mean.pdf", width = 210, height = 297, units = "mm")
 
-# sd difference of networks
+did_mean  + facet_grid(nodes ~ distribution)
 
-ggplot(results_mean_df,
-       aes(fit_dim, sd_network_diff, color = org_dim, group = org_dim)) +
+ggsave(file = "Did_mean.pdf", width = 210, height = 297, units = "mm")
+
+did_mean + facet_grid(nodes ~ distribution, scales = "free_y")
+
+ggsave(file = "Did_mean_free.pdf", width = 210, height = 297, units = "mm")
+
+
+# sd difference of distances
+
+did_sd <- ggplot(results_mean_df,
+                 aes(fit_dim, sd_distance_diff, color = org_dim, group = org_dim)) +
   geom_point() +
   geom_line() +
-  facet_grid(distribution ~ nodes) +
-  scale_color_manual(values = net_palette) +
-  # ylim(c(0, 60)) +
-  labs(title = "Variance of the difference of networks",
-        x = "Fitted dimension",
-        y = "Standard deviation",
-        color = "Original \ndimension")
-ggsave(file = "Din_sd.pdf", width = 210, height = 297, units = "mm")
+  scale_color_manual(values = dist_palette) +
+  labs(title = "Variance of the difference of distances",
+       subtitle = "Euclidean distance between the true distances between 
+       the nodes and the fitted distances",
+       x = "Fitted dimension",
+       y = "Standard deviation",
+       color = "Original \ndimension")
+
+did_sd + facet_grid(nodes ~ distribution)
+
+ggsave(file = "Did_sd.pdf", width = 210, height = 297, units = "mm")
+
+did_sd + facet_grid(nodes ~ distribution, scale = "free_y")
+
+ggsave(file = "Did_sd_free.pdf", width = 210, height = 297, units = "mm")
+
+# ------------------------------------------------------------------------------

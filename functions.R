@@ -205,7 +205,7 @@ prod_df <- function(
   
   rep <- length(simulation) # how often repeated?
   
-  df <- data.frame(matrix(vector(), 0, 6), stringsAsFactors = FALSE)
+  df <- data.frame(matrix(vector(), 0, 8), stringsAsFactors = FALSE)
   
   for(i in 1:rep) {
     for(id_nodes in 1:length(simulation[[i]])) { # go through all diff nodes
@@ -243,12 +243,10 @@ prod_df <- function(
                   nodes = as.factor(nodes), 
                   org_dim = as.factor(org_dim),
                   fit_dim = as.factor(fit_dim), 
-                  time = as.numeric(levels(time))[time], 
-                  distance_diff = as.numeric(levels(distance_diff))[distance_diff],
-                  network_diff_eucl = as.numeric(levels(
-                    network_diff_eucl))[network_diff_eucl]),
-                  network_diff_perc = as.numeric(levels(
-                    network_diff_perc))[network_diff_perc])
+                  time = as.numeric(time), 
+                  distance_diff = as.numeric(distance_diff),
+                  network_diff_eucl = as.numeric(network_diff_eucl),
+                  network_diff_perc = as.numeric(network_diff_perc))
   
   # change nodes levels
   
