@@ -230,13 +230,12 @@ comp_distance <- function(
 
 prod_df <- function(
   simulation, # a list with true networks and the fitted models
-  distribution, # you have to manually enter the distribution
-  ...
+  distribution # you have to manually enter the distribution
 ) {
   
   rep <- length(simulation) # how often repeated?
   
-  df <- data.frame(matrix(vector(), 0), stringsAsFactors = FALSE)
+  df <- data.frame(matrix(vector(), 0, 8), stringsAsFactors = FALSE)
   
   for(i in 1:rep) {
     for(id_nodes in 1:length(simulation[[i]])) { # go through all diff nodes
@@ -256,16 +255,15 @@ prod_df <- function(
           p <- a$mle
           t <- n$network
           s <- a$sim_network
-          distance_diff <- comp_distance(n, p, ...)
-          # network_diff_eucl <- comp_networks(t, s, "euclidean")
-          # network_diff_perc <- comp_networks(t, s, "percentage")
+          distance_diff_scale <- comp_distance(n, p, method = "scale")
+          distance_diff_stand <- comp_distance(n, p, method = "standardize")
+          distance_diff_proc <- comp_distance(n, p, method = "procrustes")
           
           # put row together and add to df
           df <- rbind(df, 
                       cbind(distribution, nodes, org_dim, 
-                            fit_dim, time, distance_diff
-                            # , network_diff_eucl,
-                            # network_diff_perc
+                            fit_dim, time, distance_diff_scale,
+                            distance_diff_stand, distance_diff_proc
                             ))
         }
       }
@@ -278,10 +276,9 @@ prod_df <- function(
                   org_dim = as.factor(org_dim),
                   fit_dim = as.factor(fit_dim), 
                   time = as.numeric(time), 
-                  distance_diff = as.numeric(distance_diff)
-                  # ,
-                  # network_diff_eucl = as.numeric(network_diff_eucl),
-                  # network_diff_perc = as.numeric(network_diff_perc)
+                  distance_diff_scale = as.numeric(distance_diff_scale), 
+                  distance_diff_stand = as.numeric(distance_diff_stand), 
+                  distance_diff_proc = as.numeric(distance_diff_proc)
                   )
   
   # change nodes levels

@@ -121,15 +121,6 @@ load("./simulations/simulation_groups2.RData") # load
 load("./simulations/simulation_groups3.RData") # load
 load("./simulations/simulation_groups4.RData") # load
 
-## simulate a network for each fitted model
-
-# list(simulation_unif,
-#      simulation_normal,
-#      simulation_groups2,
-#      simulation_groups3,
-#      simulation_groups4) %>%
-#   mclapply(sim_network) -> simulation_list
-
 ## compare and make a df
 
 list(simulation_unif,
@@ -137,8 +128,7 @@ list(simulation_unif,
      simulation_groups2,
      simulation_groups3,
      simulation_groups4) %>%
-# simulation_list
-  lapply(prod_df, "change", method = "procrustes") -> results_list # list with all results
+  lapply(prod_df, "change") -> results_list # list with all results
 
 # change to the right distribution
 
@@ -162,13 +152,7 @@ results_mean_df <- results_df %>%
   group_by(distribution, nodes, org_dim, fit_dim) %>%
   summarise(mean_time = mean(time),
             mean_distance_diff = mean(distance_diff),
-            # mean_network_diff_eucl = mean(network_diff_eucl),
-            # mean_network_diff_perc = mean(network_diff_perc),
             sd_time = sd(time),
-            sd_distance_diff = sd(distance_diff)
-            # ,
-            # sd_network_diff_eucl = sd(network_diff_eucl),
-            # sd_network_diff_perc = sd(network_diff_perc)
-            ) %>%
+            sd_distance_diff = sd(distance_diff)) %>%
   ungroup()
 
