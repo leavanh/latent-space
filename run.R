@@ -38,7 +38,7 @@ start_time <- Sys.time()
 simulation_unif <- foreach(i = 1:rep,
                            .packages = c("latentnet", "tidyverse",
                            "mvtnorm")) %dopar%
-                    gen_fit_all(n = c(20, 50, 100, 200), dim = c (2, 4, 6),
+                    gen_fit_all(n = c(20, 50, 100, 200), dim = c(2, 4, 6),
                           distribution = "unif")
 
 save(simulation_unif, file = "./simulations/simulation_unif.RData") # save
@@ -53,7 +53,7 @@ start_time <- Sys.time()
 simulation_normal <- foreach(i = 1:rep,
                              .packages = c("latentnet", "tidyverse",
                                            "mvtnorm")) %dopar% gen_fit_all(
-                            n = c(20, 50, 100, 200), dim = c (2, 4, 6, 8),
+                            n = c(20, 50, 100, 200), dim = c(2, 4, 6),
                             distribution = "normal")
 save(simulation_normal, file = "./simulations/simulation_normal.RData")
 
@@ -68,7 +68,7 @@ simulation_groups2 <- foreach(i = 1:rep,
                               .packages = c("latentnet", "tidyverse",
                                             "mvtnorm")) %dopar% gen_fit_all(
                                               n = c(20, 50, 100, 200),
-                                              dim = c (2, 4, 6, 8),
+                                              dim = c(2, 4, 6),
                                               distribution = "groups",
                                               n_groups = 2)
 save(simulation_groups2, file = "./simulations/simulation_groups2.RData")
@@ -84,7 +84,7 @@ simulation_groups3 <- foreach(i = 1:rep,
                               .packages = c("latentnet", "tidyverse",
                                             "mvtnorm")) %dopar%
                         gen_fit_all(n = c(20, 50, 100, 200), 
-                                    dim = c (2, 4, 6, 8),
+                                    dim = c(2, 4, 6),
                              distribution = "groups", n_groups = 3)
 save(simulation_groups3, file = "./simulations/simulation_groups3.RData")
 
@@ -98,7 +98,7 @@ start_time <- Sys.time()
 simulation_groups4 <- foreach(i = 1:rep,
                               .packages = c("latentnet", "tidyverse",
                                             "mvtnorm")) %dopar% gen_fit_all(
-                             n = c(20, 50, 100, 200), dim = c (2, 4, 6, 8),
+                             n = c(20, 50, 100, 200), dim = c(2, 4, 6),
                                  distribution = "groups", n_groups = 4)
 save(simulation_groups4, file = "./simulations/simulation_groups4.RData")
 
@@ -132,8 +132,13 @@ load("./simulations/simulation_groups4.RData") # load
 
 ## compare and make a df
 
-simulation_list %>%
-  lapply(prod_df, "change", standardize = TRUE) -> results_list # list with all results
+list(simulation_unif,
+     simulation_normal,
+     simulation_groups2,
+     simulation_groups3,
+     simulation_groups4) %>%
+# simulation_list
+  lapply(prod_df, "change", method = "procrustes") -> results_list # list with all results
 
 # change to the right distribution
 
@@ -157,11 +162,13 @@ results_mean_df <- results_df %>%
   group_by(distribution, nodes, org_dim, fit_dim) %>%
   summarise(mean_time = mean(time),
             mean_distance_diff = mean(distance_diff),
-            mean_network_diff_eucl = mean(network_diff_eucl),
-            mean_network_diff_perc = mean(network_diff_perc),
+            # mean_network_diff_eucl = mean(network_diff_eucl),
+            # mean_network_diff_perc = mean(network_diff_perc),
             sd_time = sd(time),
-            sd_distance_diff = sd(distance_diff),
-            sd_network_diff_eucl = sd(network_diff_eucl),
-            sd_network_diff_perc = sd(network_diff_perc)) %>%
+            sd_distance_diff = sd(distance_diff)
+            # ,
+            # sd_network_diff_eucl = sd(network_diff_eucl),
+            # sd_network_diff_perc = sd(network_diff_perc)
+            ) %>%
   ungroup()
 
