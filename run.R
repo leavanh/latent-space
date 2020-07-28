@@ -4,6 +4,7 @@
 library(latentnet)
 library(purrr)
 library(tidyverse)
+library(vegan)
 library(mvtnorm)
 library(doRNG)
 library(parallel)
@@ -40,7 +41,7 @@ simulation_unif <- foreach(i = 1:rep,
                     gen_fit_all(n = c(20, 50, 100, 200), dim = c (2, 4, 6),
                           distribution = "unif")
 
-save(simulation_unif, file = "simulation_unif.RData") # save
+save(simulation_unif, file = "./simulations/simulation_unif.RData") # save
 
 end_time <- Sys.time()
 time_diff_unif <- end_time-start_time
@@ -54,7 +55,7 @@ simulation_normal <- foreach(i = 1:rep,
                                            "mvtnorm")) %dopar% gen_fit_all(
                             n = c(20, 50, 100, 200), dim = c (2, 4, 6, 8),
                             distribution = "normal")
-save(simulation_normal, file = "simulation_normal.RData")
+save(simulation_normal, file = "./simulations/simulation_normal.RData")
 
 end_time <- Sys.time()
 time_diff_normal <- end_time-start_time
@@ -70,7 +71,7 @@ simulation_groups2 <- foreach(i = 1:rep,
                                               dim = c (2, 4, 6, 8),
                                               distribution = "groups",
                                               n_groups = 2)
-save(simulation_groups2, file = "simulation_groups2.RData")
+save(simulation_groups2, file = "./simulations/simulation_groups2.RData")
 
 end_time <- Sys.time()
 time_diff_groups2 <- end_time-start_time
@@ -85,7 +86,7 @@ simulation_groups3 <- foreach(i = 1:rep,
                         gen_fit_all(n = c(20, 50, 100, 200), 
                                     dim = c (2, 4, 6, 8),
                              distribution = "groups", n_groups = 3)
-save(simulation_groups3, file = "simulation_groups3.RData")
+save(simulation_groups3, file = "./simulations/simulation_groups3.RData")
 
 end_time <- Sys.time()
 time_diff_groups3 <- end_time-start_time
@@ -99,7 +100,7 @@ simulation_groups4 <- foreach(i = 1:rep,
                                             "mvtnorm")) %dopar% gen_fit_all(
                              n = c(20, 50, 100, 200), dim = c (2, 4, 6, 8),
                                  distribution = "groups", n_groups = 4)
-save(simulation_groups4, file = "simulation_groups4.RData")
+save(simulation_groups4, file = "./simulations/simulation_groups4.RData")
 
 end_time <- Sys.time()
 time_diff_groups4 <- end_time-start_time
@@ -114,20 +115,20 @@ stopCluster(cl)
 
 #### Compare the results ####
 
-load("simulation_unif.RData") # load
-load("simulation_normal.RData") # load
-load("simulation_groups2.RData") # load
-load("simulation_groups3.RData") # load
-load("simulation_groups4.RData") # load
+load("./simulations/simulation_unif.RData") # load
+load("./simulations/simulation_normal.RData") # load
+load("./simulations/simulation_groups2.RData") # load
+load("./simulations/simulation_groups3.RData") # load
+load("./simulations/simulation_groups4.RData") # load
 
 ## simulate a network for each fitted model
 
-list(simulation_unif,
-     simulation_normal,
-     simulation_groups2,
-     simulation_groups3,
-     simulation_groups4) %>%
-  mclapply(sim_network) -> simulation_list
+# list(simulation_unif,
+#      simulation_normal,
+#      simulation_groups2,
+#      simulation_groups3,
+#      simulation_groups4) %>%
+#   mclapply(sim_network) -> simulation_list
 
 ## compare and make a df
 

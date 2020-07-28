@@ -91,7 +91,8 @@ gen_network <- function(
               n = n,
               probabilities = 1 - distance,
               sociomatrix = sociomatrix,
-              dimensions = length(points)
+              dimensions = length(points),
+              points = points
   ))
 }
 
@@ -115,7 +116,9 @@ fit_models <- function(
     start <- Sys.time()
     model <- ergmm(network ~ euclidean(d = i), tofit = "mle") # fit model
     end <- Sys.time()
-    model_list[[i-1]] <- list(model = model, time = end-start)  # add to list
+    model_list[[i-1]] <- list(model = model$model,
+                              mle = model$mle,
+                              time = end-start)  # add to list
     names(model_list)[i-1] <- paste(i, "dim", "fit", sep = "_") # name
   }
   
@@ -165,30 +168,58 @@ gen_fit_all <- function(
 
 comp_distance <- function(
   network, # true network
-  model, # model too compare with
-  metric = "euclidean", # which distance metric to use
-  standardize = FALSE # scale or standardize?
+  model_mle, # model too compare with
+  method = "scale" # scale, standardize or use procrustes?
   )
 {
+  positions_network <- matrix(as.numeric(unlist(network$points)),
+                              nrow = nrow(network$points)) # true positions
   distance_network <- 1 - network$probabilities # true distances
-  positions_model <- model$mle$Z
-  distance_model <- as.matrix(dist(positions_model, method = metric)) 
+  positions_model <- model_mle$Z
+  distance_model <- as.matrix(dist(positions_model, method = "euclidean")) 
   # fitted distances
-  if(standardize == FALSE) {# scale
+  
+  if(method == "scale") {# scale
+    
     distance_model_scale <- max(distance_network)*distance_model/max(distance_model)
     diff_matrix <- distance_model_scale - distance_network
-  } else if(standardize == TRUE) {# standardize
-    distance_model_stand <- (distance_model  -mean(distance_model))/
+    
+  } else if(method == "standardize") {# standardize
+    
+    distance_model_stand <- (distance_model  - mean(distance_model))/
       sd(distance_model)
     distance_network_stand <- (distance_network - mean(distance_network))/
       sd(distance_network)
     diff_matrix <- distance_model_stand - distance_network_stand
+    
+  } else if(method == "procrustes") {# procrustes
+    
+    # we need to add zeros if dimensions aren't the same
+    # only in case of positions_network more
+    # (otherwise the function does it automatically)
+    
+    dim_diff <- ncol(positions_network) - ncol(positions_model)
+    
+    if(dim_diff > 0){
+      n <- nrow(positions_model)
+      zero_matrix <- matrix(0, nrow = n, ncol = dim_diff)
+      positions_model <- cbind(positions_model, zero_matrix)
+    } else if(dim_diff < 0) {
+      n <- nrow(positions_network)
+      zero_matrix <- matrix(0, nrow = n, ncol = abs(dim_diff))
+      positions_network <- cbind(positions_network, zero_matrix)
+    }
+    
+    
+    p <- procrustes(positions_network, positions_model, scale = TRUE)
+    positions_model_p <- fitted(p)
+    distance_model_p <- as.matrix(dist(positions_model_p, method = "euclidean"))
+    diff_matrix <- distance_model_p - distance_network
+    
   }
-  if(metric == "euclidean") {                     
-    difference <- sqrt(sum(diff_matrix*diff_matrix))
-  } else if(metric == "manhattan") {
-    difference <- sum(abs(diff_matrix))  
-  } else warning("Choose different metric")
+  
+  difference <- sqrt(sum(diff_matrix*diff_matrix))
+  
   return(difference)
 }
 
@@ -222,9 +253,10 @@ prod_df <- function(
           time <- a$time
           n <- simulation[[i]][[id_nodes]][[id_org_dim]]$network
           m <- a$model
+          p <- a$mle
           t <- n$network
           s <- a$sim_network
-          distance_diff <- comp_distance(n, m, ...)
+          distance_diff <- comp_distance(n, p, ...)
           network_diff_eucl <- comp_networks(t, s, "euclidean")
           network_diff_perc <- comp_networks(t, s, "percentage")
           
@@ -271,7 +303,7 @@ sim_network <- function(
       for(id_org_dim in 1:length(simulation[[i]][[id_nodes]])) { # all diff org dim
         for(id_fit_dim in 
             1:length(simulation[[i]][[id_nodes]][[id_org_dim]]$models[])) { # fit dim
-          m <- simulation[[i]][[id_nodes]][[id_org_dim]]$models[[id_fit_dim]]$model
+          m <- simulation[[i]][[id_nodes]][[id_org_dim]]$models[[id_fit_dim]]
           sim_network <- simulate(m$model, seed = 09101999, par = m$mle)
           
           # add to the list
