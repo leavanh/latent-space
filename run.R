@@ -30,6 +30,9 @@ registerDoParallel(cl)
 # repeat 5 times each
 
 rep <- 5
+nodes_vec <- c(20, 50, 100, 200)
+dim_vec <- c(2, 4, 6)
+
 
 set.seed(09101999)
 
@@ -38,7 +41,7 @@ start_time <- Sys.time()
 simulation_unif <- foreach(i = 1:rep,
                            .packages = c("latentnet", "tidyverse",
                            "mvtnorm")) %dopar%
-                    gen_fit_all(n = c(20, 50, 100, 200), dim = c(2, 4, 6),
+                    gen_fit_all(n = nodes_vec, dim = dim_vec,
                           distribution = "unif")
 
 save(simulation_unif, file = "./simulations/simulation_unif.RData") # save
@@ -53,7 +56,7 @@ start_time <- Sys.time()
 simulation_normal <- foreach(i = 1:rep,
                              .packages = c("latentnet", "tidyverse",
                                            "mvtnorm")) %dopar% gen_fit_all(
-                            n = c(20, 50, 100, 200), dim = c(2, 4, 6),
+                            n = nodes_vec, dim = dim_vec,
                             distribution = "normal")
 save(simulation_normal, file = "./simulations/simulation_normal.RData")
 
@@ -67,8 +70,8 @@ start_time <- Sys.time()
 simulation_groups2 <- foreach(i = 1:rep,
                               .packages = c("latentnet", "tidyverse",
                                             "mvtnorm")) %dopar% gen_fit_all(
-                                              n = c(20, 50, 100, 200),
-                                              dim = c(2, 4, 6),
+                                              n = nodes_vec,
+                                              dim = dim_vec,
                                               distribution = "groups",
                                               n_groups = 2)
 save(simulation_groups2, file = "./simulations/simulation_groups2.RData")
@@ -83,8 +86,8 @@ start_time <- Sys.time()
 simulation_groups3 <- foreach(i = 1:rep,
                               .packages = c("latentnet", "tidyverse",
                                             "mvtnorm")) %dopar%
-                        gen_fit_all(n = c(20, 50, 100, 200), 
-                                    dim = c(2, 4, 6),
+                        gen_fit_all(n = nodes_vec, 
+                                    dim = dim_vec,
                              distribution = "groups", n_groups = 3)
 save(simulation_groups3, file = "./simulations/simulation_groups3.RData")
 
@@ -98,7 +101,7 @@ start_time <- Sys.time()
 simulation_groups4 <- foreach(i = 1:rep,
                               .packages = c("latentnet", "tidyverse",
                                             "mvtnorm")) %dopar% gen_fit_all(
-                             n = c(20, 50, 100, 200), dim = c(2, 4, 6),
+                             n = nodes_vec, dim = dim_vec,
                                  distribution = "groups", n_groups = 4)
 save(simulation_groups4, file = "./simulations/simulation_groups4.RData")
 
@@ -149,7 +152,7 @@ results_df$distribution <- factor(results_df$distribution,
 # noed as factor
 
 results_df$nodes <- factor(results_df$nodes, 
-                                  levels = c("20", "50", "100", "200"))
+                                  levels = as.character(nodes_vec))
 
 
 # get mean results

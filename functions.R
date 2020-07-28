@@ -116,8 +116,7 @@ fit_models <- function(
     start <- Sys.time()
     model <- ergmm(network ~ euclidean(d = i), tofit = "mle") # fit model
     end <- Sys.time()
-    model_list[[i-1]] <- list(model = model$model,
-                              mle = model$mle,
+    model_list[[i-1]] <- list(mle = model$mle,
                               time = end-start)  # add to list
     names(model_list)[i-1] <- paste(i, "dim", "fit", sep = "_") # name
   }
