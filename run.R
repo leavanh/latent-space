@@ -146,13 +146,22 @@ results_df$distribution <- factor(results_df$distribution,
                                   levels = c("unif", "normal", "2 groups", 
                                              "3 groups", "4 groups"))
 
+# noed as factor
+
+results_df$nodes <- factor(results_df$nodes, 
+                                  levels = c("20", "50", "100", "200"))
+
+
 # get mean results
 
 results_mean_df <- results_df %>%
   group_by(distribution, nodes, org_dim, fit_dim) %>%
   summarise(mean_time = mean(time),
-            mean_distance_diff = mean(distance_diff),
+            mean_distance_diff_scale = mean(distance_diff_scale),
+            mean_distance_diff_stand = mean(distance_diff_stand),
+            mean_distance_diff_proc = mean(distance_diff_proc),
             sd_time = sd(time),
-            sd_distance_diff = sd(distance_diff)) %>%
+            sd_distance_diff_scale = sd(distance_diff_scale),
+            sd_distance_diff_stand = sd(distance_diff_stand),
+            sd_distance_diff_proc = sd(distance_diff_proc)) %>%
   ungroup()
-

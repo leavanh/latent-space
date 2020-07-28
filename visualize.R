@@ -2,15 +2,15 @@
 
 theme_set(theme_bw()) # set theme
 dist_palette <- c("#FEE090", "#FDAE61", "#F46D43", "#D73027")
-net_palette <- c("#ABD9E9", "#74ADD1", "#4575B4", "#313695")
+time_palette <- c("#ABD9E9", "#74ADD1", "#4575B4", "#313695")
 
 #### Distance of differences ####
 # ------------------------------------------------------------------------------
 
-# mean distance of differences
+## mean distance of differences
 
 did_mean <- ggplot(results_mean_df,
-                   aes(fit_dim, mean_distance_diff, color = org_dim, group = org_dim)) +
+                   aes(fit_dim, mean_distance_diff_scale, color = org_dim, group = org_dim)) +
   geom_point() +
   geom_line() +
   scale_color_manual(values = dist_palette) +

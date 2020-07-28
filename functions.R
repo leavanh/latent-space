@@ -148,7 +148,7 @@ gen_fit_all <- function(
   
   for(i in 1:length(n)) {
     for(j in 1:length(dim)) {
-      points <- rsphere(n = n[i], dim = dim[j], ...)
+      points <- rsphere(n = n[i], dim = dim[j], distribution = "unif")
       network <- gen_network(points)
       models <- fit_models(network, dim_highest)
       help_model_list[[j]] <- models # add to list
@@ -251,13 +251,10 @@ prod_df <- function(
                               pattern = "^\\d+(?=_dim)")
           time <- a$time
           n <- simulation[[i]][[id_nodes]][[id_org_dim]]$network
-          m <- a$model
-          p <- a$mle
-          t <- n$network
-          s <- a$sim_network
-          distance_diff_scale <- comp_distance(n, p, method = "scale")
-          distance_diff_stand <- comp_distance(n, p, method = "standardize")
-          distance_diff_proc <- comp_distance(n, p, method = "procrustes")
+          m <- a$mle
+          distance_diff_scale <- comp_distance(n, m, method = "scale")
+          distance_diff_stand <- comp_distance(n, m, method = "standardize")
+          distance_diff_proc <- comp_distance(n, m, method = "procrustes")
           
           # put row together and add to df
           df <- rbind(df, 
@@ -272,7 +269,7 @@ prod_df <- function(
   
   # make right type
   df <- transform(df, distribution = as.character(distribution),
-                  nodes = as.factor(nodes), 
+                  nodes = as.integer(nodes), 
                   org_dim = as.factor(org_dim),
                   fit_dim = as.factor(fit_dim), 
                   time = as.numeric(time), 
@@ -280,11 +277,7 @@ prod_df <- function(
                   distance_diff_stand = as.numeric(distance_diff_stand), 
                   distance_diff_proc = as.numeric(distance_diff_proc)
                   )
-  
-  # change nodes levels
-  
-  levels(df$nodes) <- as.character(sort(as.integer(levels(df$nodes))))
-  
+
   return(df)
 }
 
