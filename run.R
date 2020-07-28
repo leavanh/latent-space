@@ -23,7 +23,7 @@ registerDoParallel(cl)
 
 # make the networks
 # 20, 50, 100, 200 nodes
-# 2,4,6,8 dimensions
+# 2,4,6 dimensions
 # unif, normal distribution and groups of 2,3,4
 # use mle
 # repeat 5 times each
@@ -37,7 +37,7 @@ start_time <- Sys.time()
 simulation_unif <- foreach(i = 1:rep,
                            .packages = c("latentnet", "tidyverse",
                            "mvtnorm")) %dopar%
-                    gen_fit_all(n = c(20, 50, 100, 200), dim = c (2, 4, 6, 8),
+                    gen_fit_all(n = c(20, 50, 100, 200), dim = c (2, 4, 6),
                           distribution = "unif")
 
 save(simulation_unif, file = "simulation_unif.RData") # save
