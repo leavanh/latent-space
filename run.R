@@ -149,7 +149,7 @@ results_df$distribution <- factor(results_df$distribution,
                                   levels = c("unif", "normal", "2 groups", 
                                              "3 groups", "4 groups"))
 
-# noed as factor
+# nodes factor
 
 results_df$nodes <- factor(results_df$nodes, 
                                   levels = as.character(nodes_vec))
