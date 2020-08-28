@@ -24,14 +24,14 @@ registerDoParallel(cl)
 
 # make the networks
 # 20, 50, 100, 200 nodes
-# 2,4,6 dimensions
+# 1,2,4,6,8 dimensions
 # unif, normal distribution and groups of 2,3,4
 # use mle
 # repeat 5 times each
 
 rep <- 5
 nodes_vec <- c(20, 50, 100, 200)
-dim_vec <- c(2, 4, 6)
+dim_vec <- c(2, 4, 6, 8)
 
 
 set.seed(09101999)
