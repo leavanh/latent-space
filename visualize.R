@@ -30,6 +30,7 @@ did_mean + facet_grid(nodes ~ distribution, scales = "free_y")
 ggsave(file = "./Plots/Did_mean_free.pdf", width = 210, height = 297, units = "mm")
 
 
+
 # sd difference of distances
 
 did_sd <- ggplot(results_mean_df,
