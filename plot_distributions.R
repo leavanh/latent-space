@@ -15,7 +15,7 @@ ggplot(unif, aes(x, y)) +
                      limits = c(-0.75, 0.75)) +
   coord_fixed() +
   ggtitle("Uniform distribution (n = 200)")
-
+ggsave(file = "./Plots/Uniform.png", width = 200, height = 200, units = "mm")
 
 ## Normal
 
@@ -29,7 +29,7 @@ ggplot(normal, aes(x, y)) +
                      limits = c(-0.75, 0.75)) +
   coord_fixed() +
   ggtitle("Normal distribution (n = 200)")
-
+ggsave(file = "./Plots/Normal.png", width = 200, height = 200, units = "mm")
 
 ## 2 Groups
 
@@ -43,7 +43,7 @@ ggplot(groups_2, aes(x, y)) +
                      limits = c(-0.75, 0.75)) +
   coord_fixed() +
   ggtitle("2 normally distributed groups (n = 200)")
-
+ggsave(file = "./Plots/2Groups.png", width = 200, height = 200, units = "mm")
 
 ## 3 Groups
 
@@ -57,6 +57,7 @@ ggplot(groups_3, aes(x, y)) +
                      limits = c(-0.75, 0.75)) +
   coord_fixed() +
   ggtitle("3 normally distributed groups (n = 200)")
+ggsave(file = "./Plots/3Groups.png", width = 200, height = 200, units = "mm")
 
 
 ## 4 Groups
@@ -71,3 +72,4 @@ ggplot(groups_4, aes(x, y)) +
                      limits = c(-0.75, 0.75)) +
   coord_fixed() +
   ggtitle("4 normally distributed groups (n = 200)")
+ggsave(file = "./Plots/4Groups.png", width = 200, height = 200, units = "mm")

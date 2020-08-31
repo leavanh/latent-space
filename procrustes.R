@@ -41,3 +41,5 @@ ggplot(points) +
        y = "y",
        color = "Points")
 
+ggsave(file = "./Plots/Procrustes.png", width = 200, height = 200, units = "mm")
+
