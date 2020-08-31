@@ -24,10 +24,12 @@ dod_mean <- ggplot(results_mean_df,
 dod_mean  + facet_grid(nodes ~ distribution)
 
 ggsave(file = "./Plots/Dod_mean.pdf", width = 210, height = 297, units = "mm")
+ggsave(file = "./Plots/Dod_mean.png", width = 210, height = 280, units = "mm")
 
 dod_mean + facet_grid(nodes ~ distribution, scales = "free_y")
 
 ggsave(file = "./Plots/Dod_mean_free.pdf", width = 210, height = 297, units = "mm")
+ggsave(file = "./Plots/Dod_mean_free.png", width = 210, height = 280, units = "mm")
 
 
 
@@ -48,9 +50,11 @@ dod_sd <- ggplot(results_mean_df,
 dod_sd + facet_grid(nodes ~ distribution)
 
 ggsave(file = "./Plots/Dod_sd.pdf", width = 210, height = 297, units = "mm")
+ggsave(file = "./Plots/Dod_sd.png", width = 210, height = 280, units = "mm")
 
 dod_sd + facet_grid(nodes ~ distribution, scale = "free_y")
 
 ggsave(file = "./Plots/Dod_sd_free.pdf", width = 210, height = 297, units = "mm")
+ggsave(file = "./Plots/Dod_sd_free.png", width = 210, height = 280, units = "mm")
 
 # ------------------------------------------------------------------------------
