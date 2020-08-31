@@ -9,7 +9,7 @@ time_palette <- c("#ABD9E9", "#74ADD1", "#4575B4", "#313695")
 
 ## mean distance of differences
 
-did_mean <- ggplot(results_mean_df,
+dod_mean <- ggplot(results_mean_df,
                    aes(fit_dim, mean_distance_diff_proc, color = org_dim, group = org_dim)) +
   geom_point() +
   geom_line() +
@@ -21,19 +21,19 @@ did_mean <- ggplot(results_mean_df,
        y = "Mean difference of distances",
        color = "Original \ndimension")
 
-did_mean  + facet_grid(nodes ~ distribution)
+dod_mean  + facet_grid(nodes ~ distribution)
 
-ggsave(file = "./Plots/Did_mean.pdf", width = 210, height = 297, units = "mm")
+ggsave(file = "./Plots/Dod_mean.pdf", width = 210, height = 297, units = "mm")
 
-did_mean + facet_grid(nodes ~ distribution, scales = "free_y")
+dod_mean + facet_grid(nodes ~ distribution, scales = "free_y")
 
-ggsave(file = "./Plots/Did_mean_free.pdf", width = 210, height = 297, units = "mm")
+ggsave(file = "./Plots/Dod_mean_free.pdf", width = 210, height = 297, units = "mm")
 
 
 
 # sd difference of distances
 
-did_sd <- ggplot(results_mean_df,
+dod_sd <- ggplot(results_mean_df,
                  aes(fit_dim, sd_distance_diff_proc, color = org_dim, group = org_dim)) +
   geom_point() +
   geom_line() +
@@ -45,12 +45,12 @@ did_sd <- ggplot(results_mean_df,
        y = "Standard deviation",
        color = "Original \ndimension")
 
-did_sd + facet_grid(nodes ~ distribution)
+dod_sd + facet_grid(nodes ~ distribution)
 
-ggsave(file = "./Plots/Did_sd.pdf", width = 210, height = 297, units = "mm")
+ggsave(file = "./Plots/Dod_sd.pdf", width = 210, height = 297, units = "mm")
 
-did_sd + facet_grid(nodes ~ distribution, scale = "free_y")
+dod_sd + facet_grid(nodes ~ distribution, scale = "free_y")
 
-ggsave(file = "./Plots/Did_sd_free.pdf", width = 210, height = 297, units = "mm")
+ggsave(file = "./Plots/Dod_sd_free.pdf", width = 210, height = 297, units = "mm")
 
 # ------------------------------------------------------------------------------
