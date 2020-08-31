@@ -34,7 +34,7 @@ ggsave(file = "./Plots/Did_mean_free.pdf", width = 210, height = 297, units = "m
 # sd difference of distances
 
 did_sd <- ggplot(results_mean_df,
-                 aes(fit_dim, sd_distance_diff, color = org_dim, group = org_dim)) +
+                 aes(fit_dim, sd_distance_diff_proc, color = org_dim, group = org_dim)) +
   geom_point() +
   geom_line() +
   scale_color_manual(values = dist_palette) +
