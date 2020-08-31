@@ -14,29 +14,30 @@ rownames(P) <- 1:20
 N <- gen_network(P)
 M <- ergmm(N$network ~ euclidean(d = 2), tofit = "mle")
 P_hat <- M$mle$Z
-colnames(P_hat) <- c("x_hat", "y_hat")
+colnames(P_hat) <- c("x", "y")
 rownames(P_hat) <- 1:20
 
 ## Procrustes
 
 procrustes(P, P_hat, scale = TRUE) %>%
   fitted -> P_hat_star
-colnames(P_hat_star) <- c("x_hat_star", "y_hat_star")
+colnames(P_hat_star) <- c("x", "y")
 rownames(P_hat_star) <- 1:20
 
 ### Visualize
 
-# before
+points <- rbind(cbind(type = "true points", P), 
+                cbind(type = "fitted points", P_hat),
+                cbind(type = "fitted points after procrustes rotation", P_hat_star))
+points$x <- as.numeric(points$x)
+points$y <- as.numeric(points$y)
+points$type <- as.factor(points$type)
 
-before <- rbind(P, P_hat)
+ggplot(points) + 
+  geom_point(aes(x, y, color = type), alpha = 0.5) +
+  labs(title = "Visualization of the Procrustes rotation",
+       subtitle = "Uniform distribution (n = 20)",
+       x = "x",
+       y = "y",
+       color = "Points")
 
-ggplot(unif, aes(x, y)) + 
-  geom_point(alpha = 0.5) + 
-  scale_x_continuous(breaks = c(-0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75),
-                     limits = c(-0.75, 0.75))+ 
-  scale_y_continuous(breaks = c(-0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75),
-                     limits = c(-0.75, 0.75)) +
-  coord_fixed() +
-  labs(title = "Uniform distribution (n = 20)",
-       subtitle = "Before Procrustes rotation",
-       color = "Original \ndimension")
