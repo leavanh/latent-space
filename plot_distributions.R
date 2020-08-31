@@ -1,6 +1,6 @@
 ### Visualize what the distributions look like
 
-theme_set(theme_bw()) # set theme
+theme_set(theme_bw(base_size = 15)) # set theme
 set.seed(123) # set seed
 
 ## Unif
@@ -17,6 +17,7 @@ ggplot(unif, aes(x, y)) +
   ggtitle("Uniform distribution (n = 200)")
 ggsave(file = "./Plots/Uniform.png", width = 200, height = 200, units = "mm")
 
+
 ## Normal
 
 normal <- rsphere(200, distribution = "normal")
@@ -31,6 +32,7 @@ ggplot(normal, aes(x, y)) +
   ggtitle("Normal distribution (n = 200)")
 ggsave(file = "./Plots/Normal.png", width = 200, height = 200, units = "mm")
 
+
 ## 2 Groups
 
 groups_2 <- rsphere(200, distribution = "groups", n_groups = 2)
@@ -44,6 +46,7 @@ ggplot(groups_2, aes(x, y)) +
   coord_fixed() +
   ggtitle("2 normally distributed groups (n = 200)")
 ggsave(file = "./Plots/2Groups.png", width = 200, height = 200, units = "mm")
+
 
 ## 3 Groups
 

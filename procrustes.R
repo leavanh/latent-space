@@ -1,6 +1,6 @@
 ### Visualize how Procrustes works
 
-theme_set(theme_bw()) # set theme
+theme_set(theme_bw(base_size = 15)) # set theme
 set.seed(123) # set seed
 
 ## Get original points
@@ -26,20 +26,24 @@ rownames(P_hat_star) <- 1:20
 
 ### Visualize
 
-points <- rbind(cbind(type = "true points", P), 
-                cbind(type = "fitted points", P_hat),
-                cbind(type = "fitted points after procrustes rotation", P_hat_star))
+points <- rbind(cbind(type = "P", P), 
+                cbind(type = "P_hat", P_hat),
+                cbind(type = "P_hat_star", P_hat_star))
 points$x <- as.numeric(points$x)
 points$y <- as.numeric(points$y)
-points$type <- as.factor(points$type)
+points$type <- factor(points$type)
 
 ggplot(points) + 
   geom_point(aes(x, y, color = type), alpha = 0.5) +
   labs(title = "Visualization of the Procrustes rotation",
        subtitle = "Uniform distribution (n = 20)",
        x = "x",
-       y = "y",
-       color = "Points")
+       y = "y") +
+  scale_color_discrete(breaks = c("P", "P_hat", "P_hat_star"),
+                      labels = c("true points", "fitted points", 
+                                 "fitted points\nafter procrustes rotation")) +
+  theme(legend.position = "bottom",
+        legend.title = element_blank())
 
 ggsave(file = "./Plots/Procrustes.png", width = 200, height = 200, units = "mm")
 
