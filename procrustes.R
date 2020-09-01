@@ -1,7 +1,7 @@
 ### Visualize how Procrustes works
 
-theme_set(theme_bw(base_size = 15)) # set theme
-set.seed(123) # set seed
+theme_set(theme_bw(base_size = 14)) # set theme
+set.seed(3) # set seed
 
 ## Get original points
 
@@ -45,5 +45,5 @@ ggplot(points) +
   theme(legend.position = "bottom",
         legend.title = element_blank())
 
-ggsave(file = "./Plots/Procrustes.png", width = 200, height = 200, units = "mm")
+ggsave(file = "./Plots/Procrustes.png", width = 200, height = 150, units = "mm")
 

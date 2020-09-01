@@ -1,6 +1,6 @@
 ## Here I visualize the results
 
-theme_set(theme_bw(base_size = 15)) # set theme
+theme_set(theme_bw(base_size = 14)) # set theme
 dist_palette <- c("#FEE090", "#FDAE61", "#F46D43", "#D73027")
 time_palette <- c("#ABD9E9", "#74ADD1", "#4575B4", "#313695")
 

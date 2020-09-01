@@ -1,6 +1,6 @@
 ### Visualize what the distributions look like
 
-theme_set(theme_bw(base_size = 15)) # set theme
+theme_set(theme_bw(base_size = 25)) # set theme
 set.seed(123) # set seed
 
 ## Unif
@@ -44,7 +44,7 @@ ggplot(groups_2, aes(x, y)) +
   scale_y_continuous(breaks = c(-0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75),
                      limits = c(-0.75, 0.75)) +
   coord_fixed() +
-  ggtitle("2 normally distributed groups (n = 200)")
+  ggtitle("2 Groups (n = 200)")
 ggsave(file = "./Plots/2Groups.png", width = 200, height = 200, units = "mm")
 
 
@@ -59,7 +59,7 @@ ggplot(groups_3, aes(x, y)) +
   scale_y_continuous(breaks = c(-0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75),
                      limits = c(-0.75, 0.75)) +
   coord_fixed() +
-  ggtitle("3 normally distributed groups (n = 200)")
+  ggtitle("3 Groups (n = 200)")
 ggsave(file = "./Plots/3Groups.png", width = 200, height = 200, units = "mm")
 
 
@@ -74,5 +74,5 @@ ggplot(groups_4, aes(x, y)) +
   scale_y_continuous(breaks = c(-0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75),
                      limits = c(-0.75, 0.75)) +
   coord_fixed() +
-  ggtitle("4 normally distributed groups (n = 200)")
+  ggtitle("4 Groups (n = 200)")
 ggsave(file = "./Plots/4Groups.png", width = 200, height = 200, units = "mm")
