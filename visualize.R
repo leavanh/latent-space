@@ -14,11 +14,11 @@ dod_mean <- ggplot(results_mean_df,
   geom_point() +
   geom_line() +
   scale_color_manual(values = dist_palette) +
-  labs(title = "Results: Difference of distances",
+  labs(title = "Difference of Distances",
        subtitle = "Euclidean distance between the true distances between 
        the nodes and the fitted distances",
        x = "Fitted dimension",
-       y = "Mean difference of distances",
+       y = "Mean Difference of Distances",
        color = "Original \ndimension")
 
 dod_mean  + facet_grid(nodes ~ distribution)
@@ -40,7 +40,7 @@ dod_sd <- ggplot(results_mean_df,
   geom_point() +
   geom_line() +
   scale_color_manual(values = dist_palette) +
-  labs(title = "Variance of the difference of distances",
+  labs(title = "Variance of the Difference of Distances",
        subtitle = "Euclidean distance between the true distances between 
        the nodes and the fitted distances",
        x = "Fitted dimension",

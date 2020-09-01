@@ -35,13 +35,13 @@ points$type <- factor(points$type)
 
 ggplot(points) + 
   geom_point(aes(x, y, color = type), alpha = 0.5) +
-  labs(title = "Visualization of the Procrustes rotation",
+  labs(title = "Visualization of Procrustes rotation",
        subtitle = "Uniform distribution (n = 20)",
        x = "x",
        y = "y") +
   scale_color_discrete(breaks = c("P", "P_hat", "P_hat_star"),
                       labels = c("true points", "fitted points", 
-                                 "fitted points\nafter procrustes rotation")) +
+                                 "fitted points\nafter Procrustes rotation")) +
   theme(legend.position = "bottom",
         legend.title = element_blank())
 
