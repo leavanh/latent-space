@@ -11,8 +11,6 @@ library(parallel)
 library(doParallel)
 library(kableExtra)
 
-# load functions
-
 source("functions.R")
 # source("simulate.R")
 source("clean.R")
