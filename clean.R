@@ -51,3 +51,18 @@ results_mean_df <- results_df %>%
             sd_distance_diff_proc = sd(distance_diff_proc)) %>%
   ungroup()
 
+# divide by number of nodes as new variable
+
+results_mean_df <- results_mean_df %>%
+  mutate(mean_distance_diff_scale_scaled = mean_distance_diff_scale/
+           as.numeric(as.character(nodes)),
+         mean_distance_diff_stand_scaled = mean_distance_diff_stand/
+           as.numeric(as.character(nodes)),
+         mean_distance_diff_proc_scaled = mean_distance_diff_proc/
+           as.numeric(as.character(nodes)),
+         sd_distance_diff_scale_scaled = sd_distance_diff_scale/
+           as.numeric(as.character(nodes)),
+         sd_distance_diff_stand_scaled = sd_distance_diff_stand/
+           as.numeric(as.character(nodes)),
+         sd_distance_diff_proc_scaled = sd_distance_diff_proc/
+           as.numeric(as.character(nodes)))
