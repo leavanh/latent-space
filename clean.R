@@ -51,17 +51,3 @@ results_mean_df <- results_df %>%
             sd_distance_diff_proc = sd(distance_diff_proc)) %>%
   ungroup()
 
-# make a latex-table
-
-results_mean_df %>%
-  select(distribution, nodes, org_dim, fit_dim, mean_distance_diff_proc,
-         sd_distance_diff_proc) %>%
-  rename(original_dimension = "org_dim", fitted_dimension = "fit_dim",
-         mean_DoD = "mean_distance_diff_proc", 
-         sd_DoD = "sd_distance_diff_proc") %>%
-  kbl(format = "latex", 
-      booktabs = TRUE) %>%
-    kable_styling(latex_options = "striped",
-                  full_width = TRUE) %>%
-  capture.output(file = "table.txt")
-

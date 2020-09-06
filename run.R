@@ -9,7 +9,6 @@ library(mvtnorm)
 library(doRNG)
 library(parallel)
 library(doParallel)
-library(kableExtra)
 
 source("functions.R")
 # source("simulate.R")
