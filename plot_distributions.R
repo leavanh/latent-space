@@ -9,10 +9,10 @@ unif <- rsphere(200, distribution = "unif")
 colnames(unif) <- c("x", "y")
 ggplot(unif, aes(x, y)) + 
   geom_point(alpha = 0.5) + 
-  scale_x_continuous(breaks = c(-0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75),
-                     limits = c(-0.75, 0.75))+ 
-  scale_y_continuous(breaks = c(-0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75),
-                     limits = c(-0.75, 0.75)) +
+  scale_x_continuous(breaks = c(-0.5, -0.25, 0, 0.25, 0.5),
+                     limits = c(-0.5, 0.5))+ 
+  scale_y_continuous(breaks = c(-0.5, -0.25, 0, 0.25, 0.5),
+                     limits = c(-0.5, 0.5)) +
   coord_fixed() +
   ggtitle("Uniform distribution (n = 200)")
 ggsave(file = "./Plots/Uniform.png", width = 200, height = 200, units = "mm")
@@ -24,10 +24,10 @@ normal <- rsphere(200, distribution = "normal")
 colnames(normal) <- c("x", "y")
 ggplot(normal, aes(x, y)) + 
   geom_point(alpha = 0.5) + 
-  scale_x_continuous(breaks = c(-0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75),
-                     limits = c(-0.75, 0.75))+ 
-  scale_y_continuous(breaks = c(-0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75),
-                     limits = c(-0.75, 0.75)) +
+  scale_x_continuous(breaks = c(-0.5, -0.25, 0, 0.25, 0.5),
+                     limits = c(-0.5, 0.5))+ 
+  scale_y_continuous(breaks = c(-0.5, -0.25, 0, 0.25, 0.5),
+                     limits = c(-0.5, 0.5)) +
   coord_fixed() +
   ggtitle("Normal distribution (n = 200)")
 ggsave(file = "./Plots/Normal.png", width = 200, height = 200, units = "mm")
@@ -39,10 +39,10 @@ groups_2 <- rsphere(200, distribution = "groups", n_groups = 2)
 colnames(groups_2) <- c("x", "y")
 ggplot(groups_2, aes(x, y)) + 
   geom_point(alpha = 0.5) + 
-  scale_x_continuous(breaks = c(-0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75),
-                     limits = c(-0.75, 0.75))+ 
-  scale_y_continuous(breaks = c(-0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75),
-                     limits = c(-0.75, 0.75)) +
+  scale_x_continuous(breaks = c(-0.5, -0.25, 0, 0.25, 0.5),
+                     limits = c(-0.5, 0.5))+ 
+  scale_y_continuous(breaks = c(-0.5, -0.25, 0, 0.25, 0.5),
+                     limits = c(-0.5, 0.5)) +
   coord_fixed() +
   ggtitle("2 Groups (n = 200)")
 ggsave(file = "./Plots/2Groups.png", width = 200, height = 200, units = "mm")
@@ -54,10 +54,10 @@ groups_3 <- rsphere(200, distribution = "groups", n_groups = 3)
 colnames(groups_3) <- c("x", "y")
 ggplot(groups_3, aes(x, y)) + 
   geom_point(alpha = 0.5) + 
-  scale_x_continuous(breaks = c(-0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75),
-                     limits = c(-0.75, 0.75))+ 
-  scale_y_continuous(breaks = c(-0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75),
-                     limits = c(-0.75, 0.75)) +
+  scale_x_continuous(breaks = c(-0.5, -0.25, 0, 0.25, 0.5),
+                     limits = c(-0.5, 0.5))+ 
+  scale_y_continuous(breaks = c(-0.5, -0.25, 0, 0.25, 0.5),
+                     limits = c(-0.5, 0.5)) +
   coord_fixed() +
   ggtitle("3 Groups (n = 200)")
 ggsave(file = "./Plots/3Groups.png", width = 200, height = 200, units = "mm")
@@ -69,10 +69,10 @@ groups_4 <- rsphere(200, distribution = "groups", n_groups = 4)
 colnames(groups_4) <- c("x", "y")
 ggplot(groups_4, aes(x, y)) + 
   geom_point(alpha = 0.5) + 
-  scale_x_continuous(breaks = c(-0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75),
-                     limits = c(-0.75, 0.75))+ 
-  scale_y_continuous(breaks = c(-0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75),
-                     limits = c(-0.75, 0.75)) +
+  scale_x_continuous(breaks = c(-0.5, -0.25, 0, 0.25, 0.5),
+                     limits = c(-0.5, 0.5))+ 
+  scale_y_continuous(breaks = c(-0.5, -0.25, 0, 0.25, 0.5),
+                     limits = c(-0.5, 0.5)) +
   coord_fixed() +
   ggtitle("4 Groups (n = 200)")
 ggsave(file = "./Plots/4Groups.png", width = 200, height = 200, units = "mm")
