@@ -16,7 +16,7 @@ ggplot(results_mean_df,
   scale_color_manual(values = dist_palette) +
   labs(title = "Difference of Distances",
        subtitle = "Euclidean distance between the true distances between 
-       the nodes and the fitted distances",
+       the nodes and the estimated distances",
        x = "Fitted dimension",
        y = "Mean Difference of Distances",
        color = "Original \ndimension") +
@@ -32,7 +32,7 @@ ggplot(results_mean_df,
   scale_color_manual(values = dist_palette) +
   labs(title = "Difference of Distances",
        subtitle = "Euclidean distance between the true distances between 
-       the nodes and the fitted distances divided by the number of nodes",
+       the nodes and the estimated distances divided by the number of nodes",
        x = "Fitted dimension",
        y = "Mean Difference of Distances",
        color = "Original \ndimension") +
@@ -52,7 +52,7 @@ ggplot(results_mean_df,
   scale_color_manual(values = dist_palette) +
   labs(title = "Variance of the Difference of Distances",
        subtitle = "Euclidean distance between the true distances between 
-       the nodes and the fitted distances",
+       the nodes and the estimated distances",
        x = "Fitted dimension",
        y = "Standard deviation",
        color = "Original \ndimension") +
@@ -68,7 +68,7 @@ ggplot(results_mean_df,
   scale_color_manual(values = dist_palette) +
   labs(title = "Variance of the Difference of Distances",
        subtitle = "Euclidean distance between the true distances between 
-       the nodes and the fitted distances divided by the number of nodes",
+       the nodes and the estimated distances divided by the number of nodes",
        x = "Fitted dimension",
        y = "Standard deviation",
        color = "Original \ndimension") +
