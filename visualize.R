@@ -30,9 +30,9 @@ ggplot(results_mean_df,
   geom_point() +
   geom_line() +
   scale_color_manual(values = dist_palette) +
-  labs(title = "Difference of Distances",
+  labs(title = "Difference of Distances divided by the number of nodes",
        subtitle = "Euclidean distance between the true distances between 
-       the nodes and the estimated distances divided by the number of nodes",
+       the nodes and the estimated distances",
        x = "Fitted dimension",
        y = "Mean Difference of Distances",
        color = "Original \ndimension") +
@@ -40,6 +40,42 @@ ggplot(results_mean_df,
 
 ggsave(file = "./Plots/Dod_mean_free.pdf", width = 210, height = 297, units = "mm")
 ggsave(file = "./Plots/Dod_mean_free.png", width = 210, height = 280, units = "mm")
+
+
+
+## mean distance of differences (scaled)
+
+ggplot(results_mean_df,
+       aes(fit_dim, mean_distance_diff_scale, color = org_dim, group = org_dim)) +
+  geom_point() +
+  geom_line() +
+  scale_color_manual(values = dist_palette) +
+  labs(title = "Difference of Distances",
+       subtitle = "Euclidean distance between the true distances between 
+       the nodes and the estimated distances",
+       x = "Fitted dimension",
+       y = "Mean Difference of Distances",
+       color = "Original \ndimension") +
+  facet_grid(nodes ~ distribution)
+
+ggsave(file = "./Plots/Dod_scaled.pdf", width = 210, height = 297, units = "mm")
+ggsave(file = "./Plots/Dod_scaled.png", width = 210, height = 280, units = "mm")
+
+ggplot(results_mean_df,
+       aes(fit_dim, mean_distance_diff_scale_scaled, color = org_dim, group = org_dim)) +
+  geom_point() +
+  geom_line() +
+  scale_color_manual(values = dist_palette) +
+  labs(title = "Difference of Distances divided by the number of nodes",
+       subtitle = "Euclidean distance between the true distances between 
+       the nodes and the estimated distances",
+       x = "Fitted dimension",
+       y = "Mean Difference of Distances",
+       color = "Original \ndimension") +
+  facet_grid(nodes ~ distribution)
+
+ggsave(file = "./Plots/Dod_scaled_free.pdf", width = 210, height = 297, units = "mm")
+ggsave(file = "./Plots/Dod_scaled_free.png", width = 210, height = 280, units = "mm")
 
 
 
@@ -66,9 +102,9 @@ ggplot(results_mean_df,
   geom_point() +
   geom_line() +
   scale_color_manual(values = dist_palette) +
-  labs(title = "Variance of the Difference of Distances",
+  labs(title = "Variance of the Difference of Distances divided by the number of nodes",
        subtitle = "Euclidean distance between the true distances between 
-       the nodes and the estimated distances divided by the number of nodes",
+       the nodes and the estimated distances",
        x = "Fitted dimension",
        y = "Standard deviation",
        color = "Original \ndimension") +
